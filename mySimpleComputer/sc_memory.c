@@ -79,3 +79,17 @@ sc_memorySet (int address, int value)
   memory[address] = value;
   return 0;
 }
+
+void
+sc_printCell (int address)
+{
+  int row = address / 10 + 1;
+  int col = (address % 10) * 5 + 1;
+
+  if (address >= 128 || address < 0)
+    {
+      return;
+    }
+
+  printf ("%d\n", memory[address]);
+}
