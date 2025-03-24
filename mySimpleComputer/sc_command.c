@@ -9,13 +9,10 @@ sc_commandDecode (int value, int *sign, int *command, int *operand)
         return -1; 
     } 
 
-    // Получаем знак (бит 14)
     *sign = (value >> 14) & 1;
 
-    // Получаем команду (биты 13-7)
     *command = (value >> 7) & 0x7F; 
 
-    // Получаем операнд (биты 6-0)
     *operand = value & 0x7F; 
 
     return 0; 
@@ -30,23 +27,20 @@ sc_commandEncode (int sign, int command, int operand, int *value)
         return -1; 
     } 
 
-    if (command < 0 || command > 0x7F) { // 7 бит на команду
+    if (command < 0 || command > 0x7F) { 
         return -1; 
     } 
 
-    if (operand < 0 || operand > 0x7F) { // 7 бит на операнд
+    if (operand < 0 || operand > 0x7F) { 
         return -1; 
     } 
 
     int result = 0;
 
-    // Устанавливаем знак (бит 14)
     result |= (sign << 14); 
 
-    // Устанавливаем команду (биты 13-7)
     result |= (command << 7);
 
-    // Устанавливаем операнд (биты 6-0)
     result |= operand;
 
     *value = result; 
@@ -56,7 +50,7 @@ sc_commandEncode (int sign, int command, int operand, int *value)
 int
 sc_commandValidate (int command) 
 { 
-    if (command >= 0x800) 
+    if (command >= 0x4000) 
     { 
         return -1; 
     } 
