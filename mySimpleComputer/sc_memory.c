@@ -78,11 +78,14 @@ sc_memorySave (char *filename)
 int
 sc_memorySet (int address, int value) 
 { 
-    if (address >= SIZE && value >= 0x800) 
+    if (address >= SIZE || value >= 0x4000 || value <= -0x4000) 
     { 
         return -1; 
     } 
- 
+
+    if(value < 0)
+        value &= ~0xFFFF0000;
+
     memory[address] = value; 
     return 0; 
 } 
@@ -98,10 +101,20 @@ sc_printCell (int address, enum colors fg, enum colors bg)
     { 
         return; 
     } 
-
-    mt_setfgcolor (fg);
-    mt_setbgcolor (bg);
+    
     mt_gotoXY (row, col);
+
+    if(address == 0){
+        mt_setbgcolor(WHITE);
+        mt_setfgcolor(BLACK);
+    }
+
+    else{
+        mt_setfgcolor (fg);
+        mt_setbgcolor (bg);
+    }
+       
+
 
     if(memory[address] >> 15 & 1)
         printf ("-%04x", memory[address]); 

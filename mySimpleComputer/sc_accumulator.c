@@ -23,7 +23,7 @@ sc_accumulatorInit (void)
 int
 sc_accumulatorSet (int value) 
 { 
-    if (value >= 0x800) 
+    if (value >= 0x4000) 
     { 
         return -1; 
     } 

@@ -23,14 +23,22 @@ main ()
 
     mt_clrscr ();
 
+    printf("%d", sc_memorySet(0, 16383));
+
+    printf("%d", sc_memorySet(1, -16383));
+
     for(int i = 0; i < SIZE; i++)
     {
         sc_printCell (i,WHITE,BLACK);
     }
 
-    sc_printDecodedCommand (4);
+    sc_printDecodedCommand (memory[1]);
 
     sc_printAccumulator ();
+
+    sc_regSet(P, 1);
+
+    sc_regSet(T, 1);
 
     sc_printFlags ();
 
@@ -41,7 +49,7 @@ main ()
     for(int i = 0; i < 7; i++)
     {
         int rand_value = rand () % 128;
-        sc_addIOEntry (rand_value, '>', memory[rand_value]);
+        sc_addIOEntry (rand_value, '>', memory[i]);
     }
 
     sc_printTerm ();
