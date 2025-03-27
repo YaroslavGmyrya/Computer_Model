@@ -58,16 +58,15 @@ sc_commandValidate (int command)
     return 0; 
 } 
 
-void
-sc_printBinary (int number) 
-{ 
-    for (int i = 14; i >= 0; i--) 
-    { 
-        int bit = (number >> i) & 1; 
-        printf ("%d", bit); 
-    } 
-    printf ("\n"); 
-} 
+void 
+sc_printBinary(int number) {
+
+    for (int i = 14; i >= 0; i--) {
+        printf("%d", (number >> i) & 1);
+    }
+
+    printf("\n");
+}
 
 void
 sc_printDecodedCommand (int value) 

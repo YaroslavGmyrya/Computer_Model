@@ -75,6 +75,7 @@ sc_memorySave (char *filename)
     return 0; 
 }
 
+
 int
 sc_memorySet (int address, int value) 
 { 
@@ -83,10 +84,12 @@ sc_memorySet (int address, int value)
         return -1; 
     } 
 
-    if(value < 0)
-        value &= ~0xFFFF0000;
-
-    memory[address] = value; 
+   
+    if(value < 0){
+      memory[address] = (abs(value) ^ 0x3fff) | (1 << 14);
+    }
+    else
+        memory[address] = value;
     return 0; 
 } 
 
