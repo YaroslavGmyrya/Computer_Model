@@ -59,3 +59,4 @@ void sc_printCommand ();
 void sc_addIOEntry (int address, char type, int value);
 void sc_printTerm ();
 void sc_printCounter (void);
+int* decToBin(int num);
