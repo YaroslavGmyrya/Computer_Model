@@ -60,3 +60,4 @@ void sc_addIOEntry (int address, char type, int value);
 void sc_printTerm ();
 void sc_printCounter (void);
 int* decToBin(int num);
+int sc_negative_to_dec(int num);
