@@ -68,11 +68,21 @@ sc_printBinary(int number) {
     printf("\n");
 }
 
+int sc_negative_to_dec(int num){
+
+    num ^= 0x7fff;
+
+    return num;
+}
+
 void
 sc_printDecodedCommand (int value) 
 { 
     mt_gotoXY (20, 5);
-    printf ("DEC: %d | ", value); 
+    if(value & (1 << 14))
+        printf ("DEC: -%d | ", sc_negative_to_dec(value));
+    else
+        printf ("DEC: -%d | ", sc_negative_to_dec(value)); 
     printf ("OCT: %o | ", value); 
     printf ("HEX: %x   bin: ", value); 
     sc_printBinary (value); 

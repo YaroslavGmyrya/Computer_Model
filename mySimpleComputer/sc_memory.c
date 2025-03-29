@@ -79,7 +79,7 @@ sc_memorySave (char *filename)
 int
 sc_memorySet (int address, int value) 
 { 
-    if (address >= SIZE || value >= 0x4000 || value <= -0x4000) 
+    if (address >= SIZE || value > 0x3fff || value < -0x3fff) 
     { 
         return -1; 
     } 
