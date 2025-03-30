@@ -25,7 +25,7 @@ main ()
 
     printf("%d", sc_memorySet(0, 16383));
 
-    printf("%d", sc_memorySet(1, -16383));
+    printf("%d", sc_memorySet(1, -1));
 
     for(int i = 0; i < SIZE; i++)
     {

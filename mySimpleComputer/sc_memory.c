@@ -86,7 +86,10 @@ sc_memorySet (int address, int value)
 
    
     if(value < 0){
-      memory[address] = (abs(value) ^ 0x3fff) | (1 << 14);
+        if(value != -16383)
+            memory[address] = (abs(value) ^ 0x3fff) | (1 << 14) + 1;
+        else
+            memory[address] = (abs(value) ^ 0x3fff) | (1 << 14);
     }
     else
         memory[address] = value;
