@@ -87,9 +87,9 @@ sc_memorySet (int address, int value)
    
     if(value < 0){
         if(value != -16383)
-            memory[address] = (abs(value) ^ 0x3fff) | (1 << 14) + 1;
+            memory[address] = (abs(value) ^ 0x7fff) + 1;
         else
-            memory[address] = (abs(value) ^ 0x3fff) | (1 << 14);
+            memory[address] = (abs(value) ^ 0x7fff) + 1;
     }
     else
         memory[address] = value;
@@ -99,6 +99,14 @@ sc_memorySet (int address, int value)
 void
 sc_printCell (int address, enum colors fg, enum colors bg) 
 { 
+
+    int value;
+    int sign;
+    int command;
+    int operand;
+
+    sc_memoryGet (address,&value);
+    sc_commandDecode (value, &sign, &command, &operand);
 
     int row =  address / 10 + 2; 
     int col = (address % 10) * 7 + 3; 
@@ -122,9 +130,19 @@ sc_printCell (int address, enum colors fg, enum colors bg)
        
 
 
-    if(memory[address] >> 15 & 1)
-        printf ("-%04x", memory[address]); 
-    else
-        printf ("+%04x", memory[address]); 
+    if(sign){
+        if(value == 0)
+            printf("%04x", 0);
+        else
+            printf ("-%x%x", command, operand);
+        }
+        
+    else{
+        if(value == 0)
+            printf("+%04x", 0);
+        else
+            printf ("+%x%x", command, operand);
+        }
+        
 
 }
