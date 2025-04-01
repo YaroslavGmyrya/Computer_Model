@@ -9,7 +9,7 @@ sc_commandDecode (int value, int *sign, int *command, int *operand)
         return -1; 
     } 
 
-    *sign = (value >> 14) & 1;
+    *sign = value & 0x4000;
 
     *command = (value >> 7) & 0x7F; 
 
@@ -72,7 +72,7 @@ int sc_negative_to_dec(int num){
 
     num ^= 0x7fff;
 
-    return num - 1;
+    return num + 1;
 }
 
 void
@@ -81,6 +81,8 @@ sc_printDecodedCommand (int value)
     mt_gotoXY (20, 5);
     
     if(value & (1 << 14))
+        printf ("DEC: -%d | ", sc_negative_to_dec(value));
+    else
         printf ("DEC: %d | ", sc_negative_to_dec(value));
 
     printf ("OCT: %o | ", value); 
@@ -117,6 +119,9 @@ sc_printCommand ()
 
     else
     {
-        printf ("! + FF : FF");
+        if(sign)
+            printf ("! + FF : FF");
+        else
+            printf("! - FF : FF");
     }
 }
