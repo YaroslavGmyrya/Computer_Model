@@ -104,9 +104,13 @@ sc_printCell (int address, enum colors fg, enum colors bg)
     int sign;
     int command;
     int operand;
+    int result = 0;
 
     sc_memoryGet (address,&value);
     sc_commandDecode (value, &sign, &command, &operand);
+
+    result |= (command << 8);
+    result |= operand;
 
     int row =  address / 10 + 2; 
     int col = (address % 10) * 7 + 3; 
@@ -134,14 +138,14 @@ sc_printCell (int address, enum colors fg, enum colors bg)
         if(value == 0)
             printf("%04x", 0);
         else
-            printf ("-%x%x", command, operand);
+            printf ("-%02x", result);
         }
         
     else{
         if(value == 0)
             printf("+%04x", 0);
         else
-            printf ("+%x%x", command, operand);
+            printf ("+%04x", result);
         }
         
 
