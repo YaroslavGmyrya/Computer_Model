@@ -8,8 +8,8 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#define MIN_W 80
-#define MIN_H 80
+#define MIN_W 150
+#define MIN_H 150
 #define MAX_LINES 10
 
 enum colors 

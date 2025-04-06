@@ -1,5 +1,6 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myTerm.h"
+#include "../include/myBigChars.h"
 
 int
 sc_accumulatorGet (int *value) 
@@ -23,7 +24,7 @@ sc_accumulatorInit (void)
 int
 sc_accumulatorSet (int value) 
 { 
-    if (value >= 0x4000) 
+    if (value >= 0x800) 
     { 
         return -1; 
     } 
@@ -35,6 +36,14 @@ sc_accumulatorSet (int value)
 void
 sc_printAccumulator (void) 
 { 
+    struct winsize ws;
+
+    ioctl (1, TIOCGWINSZ, &ws);
+
+    bc_box(1,97,3,18, WHITE, BLACK, "Accumulator", RED, BLACK);
+
+    mt_setfgcolor(WHITE);
+
     int value; 
     sc_accumulatorGet (&value);
     mt_gotoXY (2, 100); 

@@ -1,5 +1,6 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myTerm.h"
+#include "../include/myBigChars.h"
 
 int
 sc_memoryGet (int address, int *value) 
@@ -75,7 +76,6 @@ sc_memorySave (char *filename)
     return 0; 
 }
 
-
 int
 sc_memorySet (int address, int value) 
 { 
@@ -96,10 +96,16 @@ sc_memorySet (int address, int value)
     return 0; 
 } 
 
+
 void
 sc_printCell (int address, enum colors fg, enum colors bg) 
 { 
+    bc_box(1,1,15,72, WHITE, BLACK, "Memmory", RED, BLACK);
 
+    return_table();
+
+    fflush(stdout);
+    
     int value;
     int sign;
     int command;
@@ -133,12 +139,13 @@ sc_printCell (int address, enum colors fg, enum colors bg)
     }
        
 
-
+    return_table();
     if(sign){
+        return_table();
         if(value == 0)
             printf("%04x", 0);
         else
-            printf ("-%02x", result);
+            printf ("-%04x", result);
         }
         
     else{
@@ -147,6 +154,4 @@ sc_printCell (int address, enum colors fg, enum colors bg)
         else
             printf ("+%04x", result);
         }
-        
-
 }

@@ -1,5 +1,6 @@
 #include "../include/myTerm.h"
 #include "../include/MySimpleComputer.h"
+#include "../include/myBigChars.h"
 
 void
 sc_addIOEntry (int address, char type, int value)
