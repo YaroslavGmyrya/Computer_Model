@@ -120,7 +120,7 @@ sc_printCommand ()
     mt_setfgcolor(WHITE);
 
     mt_getscreensize (&row, &col);
-    mt_gotoXY (3, col - 20);
+    mt_gotoXY (7, col - 29);
     if (command_counter < SIZE && command_counter >= 0)
     {
         sc_memoryGet (command_counter,&value);
