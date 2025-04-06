@@ -79,7 +79,7 @@ main (int argc, char *argv[])
 
     for(int i = 0; i < 7; i++)
     {
-        sc_addIOEntry (i, '>', memory[i]);
+        sc_addIOEntry (i, '>', memory[i] < 0 ? memory[i] ^ (1 << 14) : memory[i]);
     }
 
     sc_printBigCell(big_char);
