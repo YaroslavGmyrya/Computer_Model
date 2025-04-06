@@ -1,5 +1,5 @@
 #include "../include/MySimpleComputer.h"
-
+#include "../include/myBigChars.h"
 int
 main ()
 {

@@ -1,5 +1,6 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myTerm.h"
+#include "../include/myBigChars.h"
 
 int
 sc_icounterGet (int *value) 
@@ -34,6 +35,12 @@ sc_icounterSet (int value)
 void 
 sc_printCounter (void) 
 {
+    struct winsize ws;
+
+    ioctl (1, TIOCGWINSZ, &ws);
+    
+    bc_box(6,97,3,18, WHITE, BLACK, "Counter", RED, BLACK);
+
     int value;
     int row,col;
 

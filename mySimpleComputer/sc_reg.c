@@ -1,5 +1,6 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myTerm.h"
+#include "../include/myBigChars.h"
 
 int
 sc_regGet (int reg, int *value) 
@@ -48,6 +49,14 @@ sc_regInit (void)
 void
 sc_printFlags (void) 
 {
+    struct winsize ws;
+
+    ioctl (1, TIOCGWINSZ, &ws);
+    
+    bc_box(1,127,3,15, WHITE, BLACK, "Flags", RED, BLACK);
+
+    mt_setfgcolor(WHITE);
+
     int value_P;
     int value_Z;
     int value_M;

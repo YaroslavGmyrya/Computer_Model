@@ -1,16 +1,10 @@
-all: console.out main.out
-
-console.out: console.c
-	gcc -o console.out console.c
-
-main.out: main.c
-	gcc -o main.out main.c -L../mySimpleComputer/ -lmylib
+all:
+	gcc -o font.out font.c
 
 clean:
-	rm -f console.out main.out
+	rm -f font.out
 
-run: all
-	./console.out
-	./main.out
+run: 
+	./font.out
 
 .PHONY: all clean run
