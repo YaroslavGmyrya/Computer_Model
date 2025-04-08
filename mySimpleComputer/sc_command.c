@@ -88,17 +88,27 @@ sc_printDecodedCommand (int value)
 { 
     bc_box(17,1,3,72, WHITE, BLACK, "Editable cell (format)", RED, BLACK);
 
-    mt_gotoXY (18, 10);
+    mt_setbgcolor(BLACK);
+    for(int i = 0; i < 50; i++){
+        mt_gotoXY (18, 9 + i);
+        printf(" ");
+    }
+    
 
     mt_setfgcolor(WHITE);
+    mt_gotoXY (18, 9);
         
         if(value & (1 << 14))
             printf ("DEC: -%d | ", sc_negative_to_dec(value));
         else
-            printf ("DEC: %d | ", sc_negative_to_dec(value));
-    
+            printf ("DEC: %d | ", value);
+
+        mt_gotoXY (18, 22);
         printf ("OCT: %o | ", value); 
-        printf ("HEX: %x   bin: ", value); 
+        mt_gotoXY (18, 36);
+        printf ("HEX: %x   ", value); 
+        mt_gotoXY (18, 47);
+        printf("bin: ");
         sc_printBinary (value);  
 }
 
