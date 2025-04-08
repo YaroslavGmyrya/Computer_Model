@@ -18,13 +18,14 @@ sc_addIOEntry (int address, char type, int value)
 void 
 sc_printTerm () 
 {
-    mt_gotoXY(20,100);
-    printf ("IN-OUT:\n");
+    bc_box(26, 97, 9, 16, WHITE, BLACK, "IN-OUT", RED, BLACK);
+    mt_gotoXY(26,100);
+    mt_setfgcolor(WHITE);
     for (int i = 0, j = 1; i < MAX_LINES; i++) 
     {
         if (io_log[i].type != 0) 
         { 
-            mt_gotoXY (20+j,100);
+            mt_gotoXY (26+j,100);
             printf("%03d %c %04X\n", io_log[i].address, io_log[i].type, io_log[i].value);
             j++;
         }

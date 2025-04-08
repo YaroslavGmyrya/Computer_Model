@@ -21,13 +21,13 @@ void sc_printBigCell(int big_char[][2]){
     for(int i = 1; i <= 4; ++i){
         tmp = result & (mask << (4 * (i - 1)));
         tmp = tmp >> (4 * (i -1));
-        bc_printbigchar(big_char[tmp], 11, 105 + ((5 - i) * 9), LIGHT_GREEN, BLACK);
+        bc_printbigchar(big_char[tmp], 11, 105 + ((5 - i) * 9), WHITE, BLACK);
     }
 
     if(sign)
-        bc_printbigchar(big_char[16], 11, 105, LIGHT_GREEN, BLACK);
+        bc_printbigchar(big_char[16], 11, 105, WHITE, BLACK);
     else
-        bc_printbigchar(big_char[17], 11, 105, LIGHT_GREEN, BLACK);
+        bc_printbigchar(big_char[17], 11, 105, WHITE, BLACK);
     fflush(stdout);
     return_table();
 }

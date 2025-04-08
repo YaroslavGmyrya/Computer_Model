@@ -47,6 +47,8 @@ sc_printCounter (void)
     mt_getscreensize (&row, &col);
     sc_icounterGet (&value);
 
+    mt_setfgcolor(WHITE);
+
     mt_gotoXY (7, col - 59);
 
     printf ("T: %d    IC: %d", value, value);

@@ -89,14 +89,16 @@ sc_printDecodedCommand (int value)
     bc_box(17,1,3,72, WHITE, BLACK, "Editable cell (format)", RED, BLACK);
 
     mt_gotoXY (18, 10);
+
+    mt_setfgcolor(WHITE);
         
         if(value & (1 << 14))
             printf ("DEC: -%d | ", sc_negative_to_dec(value));
         else
             printf ("DEC: %d | ", sc_negative_to_dec(value));
     
-        printf ("OCT: %o | ", value ^ (1 << 14)); 
-        printf ("HEX: %x   bin: ", value ^ (1 << 14)); 
+        printf ("OCT: %o | ", value); 
+        printf ("HEX: %x   bin: ", value); 
         sc_printBinary (value);  
 }
 
@@ -130,14 +132,14 @@ sc_printCommand ()
         {   
             fflush(stdout);
             return_table();
-            printf ("- %x : %x", command, operand);
+            printf ("- %02x : %02x", command, operand);
         }
 
         else
         {   
             fflush(stdout);
             return_table();
-            printf ("+ %x : %x", command, operand);
+            printf ("+ %02x : %02x", command, operand);
         }
     }
 

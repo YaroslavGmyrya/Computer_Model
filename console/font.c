@@ -1,6 +1,7 @@
 #include <stdio.h>
 #define ROWS 18
 #define COLS 2
+
 int main(){
 
     int big_char[][2] = {
@@ -24,7 +25,7 @@ int main(){
         {0x7C180000,  0x187C},      // +
     };
 
-    FILE *file = fopen("../font", "wb");
+    FILE *file = fopen("../font.bin", "wb");
 
     fwrite(big_char, sizeof(int), ROWS * COLS, file);
 
