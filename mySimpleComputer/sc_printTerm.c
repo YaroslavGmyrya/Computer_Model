@@ -26,7 +26,10 @@ sc_printTerm ()
         if (io_log[i].type != 0) 
         { 
             mt_gotoXY (26+j,100);
-            printf("%03d %c %04X\n", io_log[i].address, io_log[i].type, io_log[i].value);
+            if(io_log[i].value & (1<<14))
+                printf("%03d %c -%04X\n", io_log[i].address, io_log[i].type, io_log[i].value);
+            else
+                printf("%03d %c -%04X\n", io_log[i].address, io_log[i].type, io_log[i].value);
             j++;
         }
     }

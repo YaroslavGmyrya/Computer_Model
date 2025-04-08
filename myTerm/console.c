@@ -1,7 +1,7 @@
 #include "../include/myTerm.h"
 #include "../include/MySimpleComputer.h"
 #include "../include/myBigChars.h"
-
+#include "../include/myReadKey.h"
 #define ROWS 18                  
 #define COLS 2
 
@@ -29,7 +29,6 @@ main (int argc, char *argv[])
 
     fclose(file);
 
-
     struct winsize ws;
 
     return_table();
@@ -48,60 +47,42 @@ main (int argc, char *argv[])
     
     mt_clrscr ();
 
-    printf("%d  %d", ws.ws_row, ws.ws_col);
+    sc_memorySet(0, 16383);
 
-    sc_memorySet(0, -2);
+    sc_TermUpdate(big_char);
 
-    for(int i = 0; i < SIZE; i++)
-    {   
-        return_table();
-        fflush(stdout);
-        sc_printCell (i,WHITE,BLACK);
+    enum KEYS value;
+
+    rk_mytermregime(1, 50, 1, 0, 1);
+    //rk_mytermregime(0, 50, 1, 1, 1);
+
+    while(1){
+        rk_readkey(&value);
+        if(value == KEYS_NAME[KEY_i] || value == KEYS_NAME[KEY_I]){
+            sc_memorySet(0, 0);
+
+            for (int i = 0; i < MAX_LINES; i++) {
+                io_log[i].address = 0;
+                io_log[i].type = 0;
+                io_log[i].value = 0;
+            }
+
+            sc_TermUpdate(big_char);
+        }
+
+        else if(value == KEYS_NAME[KEY_RIGHT]){
+            command_counter++;
+            sc_TermUpdate(big_char);
+        }
+
+        else if(value == KEYS_NAME[KEY_LEFT]){
+            command_counter--;
+            sc_TermUpdate(big_char);
+        }
+
+        else if(value == KEYS_NAME[KEY_q])
+            break;
     }
 
-    fflush(stdout);
-
-    sc_printDecodedCommand (memory[0]);
-
-    sc_printAccumulator ();
-
-    sc_regSet(T, 1);
-
-    sc_printFlags ();
-
-    sc_printCounter ();
-
-    fflush(stdout);
-    return_table();
-
-    sc_printCommand ();
-
-    fflush(stdout);
-    return_table();
-
-    for(int i = 0; i < 7; i++)
-    {
-        sc_addIOEntry (i, '>', memory[i] < 0 ? memory[i] ^ (1 << 14) : memory[i]);
-    }
-
-    sc_printBigCell(big_char);
-
-    fflush(stdout);
-
-    //bc_printbigchar(big_char[0], 11, 98, LIGHT_GREEN, BLACK);
-    //bc_printbigchar(big_char[1], 11, 107, LIGHT_GREEN, BLACK);
-    //bc_printbigchar(big_char[2], 11, 115, LIGHT_GREEN, BLACK);
-   // bc_printbigchar(big_char[3], 11, 124, LIGHT_GREEN, BLACK);
-    //bc_printbigchar(big_char[5], 11, 133, LIGHT_GREEN, BLACK);
-
-
-    sc_printTerm ();
-
-    mt_gotoXY(35, 1);
-   
-    mt_setdefaultcolor ();
-
-    fflush(stdout);
-    return_table();
-    fflush(stdout);
+    rk_mytermregime(0, 50, 1, 1, 1);
 }

@@ -61,3 +61,4 @@ void sc_addIOEntry (int address, char type, int value);
 void sc_printTerm ();
 void sc_printCounter (void);
 void sc_printBigCell(int big_char[][2]);
+void sc_TermUpdate(int big_char[][2]);
