@@ -5,7 +5,7 @@
 #define ROWS 18                  
 #define COLS 2
 
-#define DEFAULT_FILE "font"
+#define DEFAULT_FILE "font.bin"
 
 int
 main (int argc, char *argv[])
@@ -50,7 +50,7 @@ main (int argc, char *argv[])
 
     printf("%d  %d", ws.ws_row, ws.ws_col);
 
-    sc_memorySet(0, -16383);
+    sc_memorySet(0, -2);
 
     for(int i = 0; i < SIZE; i++)
     {   
@@ -64,6 +64,8 @@ main (int argc, char *argv[])
     sc_printDecodedCommand (memory[0]);
 
     sc_printAccumulator ();
+
+    sc_regSet(T, 1);
 
     sc_printFlags ();
 
