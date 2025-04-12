@@ -25,7 +25,15 @@ const int KEYS_NAME[] = {
     //Enter
     0x0a,
     //Signs
-    0x2b0a, 0x2d0a
+    0x2b, 0x2d,
+    //ESC
+    0x1b,
+    //BACKSPACE
+    0x7f,
+    //F2
+    0x1b4f51,
+    //F4
+    0x1b4f53
 };
 
 struct termios saved_attributes;

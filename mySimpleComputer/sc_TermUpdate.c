@@ -1,5 +1,6 @@
 #include "../include/MySimpleComputer.h"
 void sc_TermUpdate(int big_char[][2]){
+
     int counter_value = 0;
     int memory_value = 0;
 
@@ -33,11 +34,6 @@ void sc_TermUpdate(int big_char[][2]){
     
     fflush(stdout);
     return_table();
-
-    for(int i = 0; i < 7; i++)
-    {
-        sc_addIOEntry (i, '>', memory[i] < 0 ? memory[i] ^ (1 << 14) : memory[i]);
-    }
     
     sc_printBigCell(big_char);
     
@@ -45,6 +41,8 @@ void sc_TermUpdate(int big_char[][2]){
     
     
     sc_printTerm ();
+
+    sc_printInfo();
     
     mt_gotoXY(35, 1);
     

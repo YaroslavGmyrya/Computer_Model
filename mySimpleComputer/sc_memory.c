@@ -107,12 +107,14 @@ sc_printCell (int address, enum colors fg, enum colors bg)
     fflush(stdout);
     
     int value;
+    int command_value;
     int sign;
     int command;
     int operand;
     int result = 0;
 
     sc_memoryGet (address,&value);
+    sc_icounterGet(&command_value);
     sc_commandDecode (value, &sign, &command, &operand);
 
     result |= (command << 8);
@@ -128,7 +130,7 @@ sc_printCell (int address, enum colors fg, enum colors bg)
     
     mt_gotoXY (row, col);
 
-    if(address == 0){
+    if(address == command_value){
         mt_setbgcolor(WHITE);
         mt_setfgcolor(BLACK);
     }
@@ -155,3 +157,4 @@ sc_printCell (int address, enum colors fg, enum colors bg)
             printf ("+%04x", result);
         }
 }
+
