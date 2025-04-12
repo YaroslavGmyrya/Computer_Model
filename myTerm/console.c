@@ -49,17 +49,30 @@ main (int argc, char *argv[])
 
     sc_memorySet(0, 16383);
 
+    for(int i = 0; i < 7; i++)
+    {
+        sc_addIOEntry (i, '>', memory[i] < 0 ? memory[i] ^ (1 << 14) : memory[i]);
+    }
+
     sc_TermUpdate(big_char);
 
     enum KEYS value;
 
     rk_mytermregime(1, 50, 1, 0, 1);
-    //rk_mytermregime(0, 50, 1, 1, 1);
 
     while(1){
+
         rk_readkey(&value);
+
+        rk_mytermregime(1, 50, 1, 0, 1);
+        
+        if(value == KEYS_NAME[KEY_ESC])
+            break;
+
+
         if(value == KEYS_NAME[KEY_i] || value == KEYS_NAME[KEY_I]){
-            sc_memorySet(0, 0);
+
+            sc_memoryInit();
 
             for (int i = 0; i < MAX_LINES; i++) {
                 io_log[i].address = 0;
@@ -71,18 +84,364 @@ main (int argc, char *argv[])
         }
 
         else if(value == KEYS_NAME[KEY_RIGHT]){
-            command_counter++;
+
+            if(command_counter + 1 > 127)
+                command_counter = 0;
+            
+            else
+                command_counter++;
+
             sc_TermUpdate(big_char);
         }
 
         else if(value == KEYS_NAME[KEY_LEFT]){
-            command_counter--;
+
+            if(command_counter - 1 < 0)
+                command_counter = 127;
+        
+            else
+                command_counter--;
+
             sc_TermUpdate(big_char);
         }
 
-        else if(value == KEYS_NAME[KEY_q])
+        else if(value == KEYS_NAME[KEY_TOP]){
+
+            if(command_counter - 10 < 0)
+                command_counter = 120 + (command_counter % 10);
+        
+            else
+                command_counter -= 10;
+
+            sc_TermUpdate(big_char);
+        }
+
+        else if(value == KEYS_NAME[KEY_BOTTOM]){
+
+            if(command_counter + 10 > 127)
+                command_counter = 0 + (command_counter % 10);
+
+            else
+                command_counter+=10;
+
+            sc_TermUpdate(big_char);
+        }
+
+        else if(value == KEYS_NAME[KEY_S] || value == KEYS_NAME[KEY_s]){
+           sc_memorySave("memory.bin");
+        }
+
+        else if(value == KEYS_NAME[KEY_L] || value == KEYS_NAME[KEY_l]){
+            sc_memoryLoad("memory.bin");
+            sc_TermUpdate(big_char);
+         }
+
+       else if (value == KEYS_NAME[KEY_F2]) {
+    int x = 2, y = 116;
+    int block = 0;
+    int y_max = y;
+    int y_min = y - 5;
+
+    mt_gotoXY(x, y);
+    rk_readkey(&value);
+
+    char buffer[6];
+    buffer[5] = '\0';
+    rk_accumulator_to_string(buffer);
+    int current_pos = 6;
+
+    while (1) {
+        mt_gotoXY(x, y);
+        rk_mytermregime(1, 50, 1, 0, 1);
+        rk_readkey(&value);
+
+        if (value == KEYS_NAME[KEY_BACKSPACE]) {
+            if (current_pos > 0) {
+                buffer[--current_pos] = ' ';
+                if (y > y_min)
+                    y--;
+                printf(" ");
+                mt_gotoXY(x, y);
+            }
+        }
+
+        else if (value == KEYS_NAME[KEY_RIGHT]) {
+            if (y < y_max) {
+                current_pos++;
+                y++;
+                mt_gotoXY(x, y);
+            }
+            else if (y >= y_max && block) {
+                block--;
+                y += 7;
+                y_min = y - 1;
+                y_max = y + 4;
+
+                mt_gotoXY(x, y);
+                rk_accumulator_to_string(buffer);
+                current_pos = 5;
+            }
+        }
+
+        else if (value == KEYS_NAME[KEY_LEFT]) {
+            if (y > y_min + 1) {
+                current_pos--;
+                y--;
+                mt_gotoXY(x, y);
+            }
+            else if (y <= y_min + 1 && !block) {
+                block++;
+                y -= 7;
+                y_max = y;
+                y_min = y - 5;
+
+                mt_gotoXY(x, y);
+                rk_accumulator_to_string(buffer);
+                current_pos = 5;
+            }
+        }
+
+        else if ((KEYS_NAME[KEY_a] <= value && value <= KEYS_NAME[KEY_f]) ||
+                 (KEYS_NAME[KEY_A] <= value && value <= KEYS_NAME[KEY_F]) ||
+                 value == KEYS_NAME[KEY_PLUS] || value == KEYS_NAME[KEY_MINUS] ||
+                 (KEYS_NAME[KEY_0] <= value && value <= KEYS_NAME[KEY_9])) {
+
+            if (y < y_max)
+                y++;
+
+            if (current_pos < 5) {
+                buffer[current_pos++] = value;
+                rk_mytermregime(1, 50, 1, 1, 1);
+                mt_gotoXY(x, y);
+                printf("%c", value);
+            }
+        }
+
+        else if (value == KEYS_NAME[KEY_ENTER]) {
+            if (block == 0) {
+
+                char unsigned_buffer[5]; 
+                strncpy(unsigned_buffer, buffer + 1, 4);
+                int val = rk_hex_to_dec(unsigned_buffer);
+                sc_accumulatorSet(val);
+                sc_TermUpdate(big_char);
+            } else {
+                char operand_char[3] = {'\0'};
+                char command_char[3] = {'\0'};
+
+                command_char[0] = buffer[1];
+                command_char[1] = buffer[2];
+                operand_char[0] = buffer[3];
+                operand_char[1] = buffer[4];
+                int command_int = rk_hex_to_dec(command_char);
+                int operand_int = rk_hex_to_dec(operand_char);
+                int encoded_value;
+
+                if (buffer[0] == '+')
+                    sc_commandEncode(0, command_int, operand_int, &encoded_value);
+                else if (buffer[0] == '-')
+                    sc_commandEncode(1, command_int, operand_int, &encoded_value);
+
+                sc_accumulatorSet(encoded_value);
+                sc_TermUpdate(big_char);
+            }
             break;
+        }
+
+        else if (value == KEYS_NAME[KEY_ESC]) {
+            sc_TermUpdate(big_char);
+            break;
+        }
+    }
+}
+
+    else if (value == KEYS_NAME[KEY_F4]) {
+        int x = 7, y = 115;
+        int block = 0;
+        int y_max = y;
+        int y_min = y - 3;
+
+        mt_gotoXY(x, y);
+        rk_readkey(&value);
+
+        char buffer[4] = {'\0'};
+        rk_counter_to_string(buffer);
+        int current_pos = 3;
+
+        mt_gotoXY(30, 30);
+        printf("%s", buffer);
+
+        while (1) {
+            mt_gotoXY(x, y);
+            rk_mytermregime(1, 50, 1, 0, 1);
+            rk_readkey(&value);
+
+            if (value == KEYS_NAME[KEY_BACKSPACE]) {
+                if (current_pos > 0) {
+                    current_pos--;
+                    buffer[current_pos] = ' ';
+                    if (y - 1 >= y_min) y--;
+                    mt_gotoXY(x, y);
+                    printf(" ");
+                }
+                mt_gotoXY(30, 30);
+                printf("%s", buffer);
+            }
+
+            else if (value == KEYS_NAME[KEY_RIGHT]) {
+                if (y + 1 <= y_max) {
+                    current_pos++;
+                    y++;
+                    mt_gotoXY(x, y);
+                } else if (block) {
+                    block--;
+                    y += 10;
+                    y_min = y - 1;
+                    y_max = y + 2;
+                    mt_gotoXY(x, y);
+                    rk_counter_to_string(buffer);
+                    current_pos = 3;
+                }
+            }
+
+            else if (value == KEYS_NAME[KEY_LEFT]) {
+                if (y - 1 > y_min) {
+                    current_pos--;
+                    y--;
+                    mt_gotoXY(x, y);
+                } else if (!block) {
+                    block++;
+                    y -= 10;
+                    y_max = y;
+                    y_min = y - 3;
+                    mt_gotoXY(x, y);
+                    rk_counter_to_string(buffer);
+                    current_pos = 3;
+                }
+            }
+
+            else if (KEYS_NAME[KEY_0] <= value && value <= KEYS_NAME[KEY_9]) {
+                if (y + 1 <= y_max) y++;
+
+                if (current_pos < 3) {
+                    buffer[current_pos++] = value;
+                    rk_mytermregime(1, 50, 1, 1, 1);
+                    mt_gotoXY(x, y);
+                    printf("%c", value);
+                }
+            }
+
+            else if (value == KEYS_NAME[KEY_ENTER]) {
+                sc_icounterSet(rk_string_dec_to_dec(buffer));
+                sc_TermUpdate(big_char);
+                break;
+            }
+
+            else if (value == KEYS_NAME[KEY_ESC]) {
+                sc_TermUpdate(big_char);
+                break;
+            }
+
+            if(value == KEYS_NAME[KEY_ESC])
+                break;
+        }
     }
 
+    else if(value == KEYS_NAME[KEY_ENTER]){
+        char buffer[6];
+        buffer[5] = '\0';
+        rk_command_to_string(buffer);
+        int current_pos = 5;
+        int new_value;
+
+        int x, y = 0;
+
+        x = command_counter / 10 + 2;
+        y = (command_counter % 10) * 7 + 7;
+
+        int y_min = y - 5;
+        int y_max = y;
+
+        while(1){
+
+            mt_gotoXY(x, y);
+
+            rk_mytermregime(1, 50, 1, 0, 1);
+
+            rk_readkey(&value);
+
+            if(value == KEYS_NAME[KEY_BACKSPACE]){
+
+                if(current_pos != 0)
+                    buffer[--current_pos] = ' ';
+
+                if(y - 1 >= y_min)
+                    mt_gotoXY(x, y--);
+
+                else
+                    mt_gotoXY(x, y);
+
+                printf(" ");
+            }
+
+            if(value == KEYS_NAME[KEY_RIGHT]){
+                if(y + 1 <= y_max){
+                    current_pos++;
+                    y++;
+                }
+                
+            }
+
+            if(value == KEYS_NAME[KEY_LEFT]){
+                if(y - 1 > y_min){
+                    current_pos--;
+                    y--;
+                }
+            }
+
+            if((KEYS_NAME[KEY_a] <= value && value <= KEYS_NAME[KEY_f]) || (KEYS_NAME[KEY_A] <= value && value <= KEYS_NAME[KEY_F]) || value == KEYS_NAME[KEY_PLUS] || 
+                value == KEYS_NAME[KEY_MINUS] || (KEYS_NAME[KEY_0] <= value && value <= KEYS_NAME[KEY_9])){
+
+                if(y + 1 <= y_max)
+                    y+=1;
+
+                if(current_pos < 5){
+
+                    buffer[current_pos++] = value;
+                    rk_mytermregime(1, 50, 1, 1, 1);
+                    mt_gotoXY(x,y);
+                    printf("%c", value);
+                }
+            }
+            
+            if(value == KEYS_NAME[KEY_ESC])
+                break;
+
+            if(value == KEYS_NAME[KEY_ENTER]){
+                char ubuffer[5];
+
+                strcpy(ubuffer, buffer + 1);
+
+                mt_gotoXY(30, 40);
+                printf("%d\n", rk_hex_to_dec(ubuffer));
+                printf("%s", ubuffer);
+
+                if(buffer[0] == '+')
+                    sc_memorySet(command_counter, rk_hex_to_dec(ubuffer));
+                else if(buffer[0] == '-')
+                    sc_memorySet(command_counter, -rk_hex_to_dec(ubuffer));
+
+                sc_addIOEntry(command_counter, '>', rk_hex_to_dec(ubuffer));
+        
+                sc_TermUpdate(big_char);
+
+                break;
+            }
+
+        }
+    }
+}
+
     rk_mytermregime(0, 50, 1, 1, 1);
+
 }

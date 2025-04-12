@@ -23,10 +23,8 @@ sc_icounterInit (void)
 int
 sc_icounterSet (int value) 
 { 
-    if (value >= 0x800) 
-    {  
-        return -1; 
-    } 
+    if(value < 0 || value > 127)
+        return -1;
  
     command_counter = value; 
     return 0; 
@@ -39,7 +37,7 @@ sc_printCounter (void)
 
     ioctl (1, TIOCGWINSZ, &ws);
     
-    bc_box(6,97,3,18, WHITE, BLACK, "Counter", RED, BLACK);
+    bc_box(6,96,3,22, WHITE, BLACK, "Counter", RED, BLACK);
 
     int value;
     int row,col;
@@ -49,7 +47,7 @@ sc_printCounter (void)
 
     mt_setfgcolor(WHITE);
 
-    mt_gotoXY (7, col - 59);
+    mt_gotoXY (7, col - 61);
 
-    printf ("T: %d    IC: %d", value, value);
+    printf ("T: %03d     IC: %03d", 0, value);
 }

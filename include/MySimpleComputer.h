@@ -10,7 +10,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-#define MAX_LINES 10
+#define MAX_LINES 7
 #define MAX_STR_LEN 20
 #define P 0x1
 #define Z 0x2
@@ -62,3 +62,5 @@ void sc_printTerm ();
 void sc_printCounter (void);
 void sc_printBigCell(int big_char[][2]);
 void sc_TermUpdate(int big_char[][2]);
+void sc_printInfo();
+int sc_negative_to_dec(int num);

@@ -51,6 +51,7 @@ sc_commandEncode (int sign, int command, int operand, int *value)
     result |= operand;
 
     *value = result; 
+
     return 0; 
 }
 

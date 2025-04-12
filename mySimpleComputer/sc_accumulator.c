@@ -24,12 +24,21 @@ sc_accumulatorInit (void)
 int
 sc_accumulatorSet (int value) 
 { 
-    if (value >= 0x800) 
+ 
+    if (value > 0x3fff || value < -0x3fff) 
     { 
         return -1; 
     } 
- 
-    accumulator = value; 
+
+   
+    if(value < 0){
+        if(value != -16383)
+            accumulator = (abs(value) ^ 0x7fff) + 1;
+        else
+            accumulator = (abs(value) ^ 0x7fff) + 1;
+    }
+    else
+        accumulator = value;
     return 0; 
 } 
 
@@ -40,12 +49,20 @@ sc_printAccumulator (void)
 
     ioctl (1, TIOCGWINSZ, &ws);
 
-    bc_box(1,97,3,18, WHITE, BLACK, "Accumulator", RED, BLACK);
+    bc_box(1,96,3,22, WHITE, BLACK, "Accumulator", RED, BLACK);
 
     mt_setfgcolor(WHITE);
 
-    int value; 
+    int value, sign, command, operand; 
+
     sc_accumulatorGet (&value);
-    mt_gotoXY (2, 100); 
-    printf ("sc: %d hex: %x\n", value, value); 
+
+    sc_commandDecode(value, &sign, &command, &operand);
+
+    mt_gotoXY (2, 97); 
+
+    if(value & (1 << 14))
+        printf ("sc: -%02x%02x hex: -%04x\n", command, operand, value);
+    else
+        printf ("sc: +%02x%02x hex: +%04x\n", command, operand, value);  
 } 

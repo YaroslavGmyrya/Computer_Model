@@ -70,9 +70,18 @@ enum KEYS{
     KEY_BOTTOM,
     KEY_LEFT,
     KEY_RIGHT,
+
     KEY_ENTER,
+
     KEY_PLUS,
     KEY_MINUS,
+
+    KEY_ESC,
+
+    KEY_BACKSPACE,
+
+    KEY_F2,
+    KEY_F4,
 };
 
 extern const int KEYS_NAME[];
@@ -84,3 +93,8 @@ int rk_mytermsave(void);
 int rk_mytermrestore(void);
 int rk_mytermregime(int regime, int vtime, int vmin, int echo, int sigint);
 int rk_readvalue(int *value, int timeout);
+int rk_hex_to_dec(char *hex);
+void rk_command_to_string(char *hex);
+void rk_accumulator_to_string(char* hex);
+void rk_counter_to_string(char *hex);
+int rk_string_dec_to_dec(char *num);
