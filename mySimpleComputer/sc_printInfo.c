@@ -22,9 +22,9 @@ void sc_printInfo(){
 
     mt_gotoXY(26, 121);
 
-    printf("F5 - accumulator");
+    printf("F2 - accumulator");
 
     mt_gotoXY(27, 121);
 
-    printf("F6 - instruction counter");
+    printf("F4 - instruction counter");
 }
