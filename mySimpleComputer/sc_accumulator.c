@@ -25,7 +25,7 @@ int
 sc_accumulatorSet (int value) 
 { 
  
-    if (value > 0x3fff || value < -0x3fff) 
+    if (value > 0x7fff || value < -0x7fff) 
     { 
         return -1; 
     } 
@@ -62,7 +62,7 @@ sc_printAccumulator (void)
     mt_gotoXY (2, 97); 
 
     if(value & (1 << 14))
-        printf ("sc: -%02x%02x hex: -%04x\n", command, operand, value);
+        printf ("sc: -%02x%02x hex: %04x\n", command, operand, value);
     else
-        printf ("sc: +%02x%02x hex: +%04x\n", command, operand, value);  
+        printf ("sc: +%02x%02x hex: %04x\n", command, operand, value);  
 } 

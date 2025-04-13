@@ -222,7 +222,10 @@ main (int argc, char *argv[])
 
                 char unsigned_buffer[5]; 
                 strncpy(unsigned_buffer, buffer + 1, 4);
+                mt_gotoXY(33, 40);
+                printf("%s", unsigned_buffer);
                 int val = rk_hex_to_dec(unsigned_buffer);
+                printf("%d", val);
                 sc_accumulatorSet(val);
                 sc_TermUpdate(big_char);
             } else {
@@ -240,8 +243,13 @@ main (int argc, char *argv[])
                 if (buffer[0] == '+')
                     sc_commandEncode(0, command_int, operand_int, &encoded_value);
                 else if (buffer[0] == '-')
+                {
                     sc_commandEncode(1, command_int, operand_int, &encoded_value);
+                }
+                    
 
+                mt_gotoXY(40, 40);
+                printf("%x", encoded_value);
                 sc_accumulatorSet(encoded_value);
                 sc_TermUpdate(big_char);
             }
@@ -256,9 +264,9 @@ main (int argc, char *argv[])
 }
 
     else if (value == KEYS_NAME[KEY_F4]) {
-        int x = 7, y = 115;
+        int x = 7, y = 116;
         int block = 0;
-        int y_max = y;
+        int y_max = y - 1;
         int y_min = y - 3;
 
         mt_gotoXY(x, y);
@@ -267,9 +275,6 @@ main (int argc, char *argv[])
         char buffer[4] = {'\0'};
         rk_counter_to_string(buffer);
         int current_pos = 3;
-
-        mt_gotoXY(30, 30);
-        printf("%s", buffer);
 
         while (1) {
             mt_gotoXY(x, y);
@@ -320,19 +325,22 @@ main (int argc, char *argv[])
                 }
             }
 
-            else if (KEYS_NAME[KEY_0] <= value && value <= KEYS_NAME[KEY_9]) {
+            else if ((KEYS_NAME[KEY_0] <= value && value <= KEYS_NAME[KEY_9]) || 
+                    (KEYS_NAME[KEY_A] <= value && value >= KEYS_NAME[KEY_F]) || 
+                    (KEYS_NAME[KEY_a] <= value && value <= KEYS_NAME[KEY_f] )) {
+
                 if (y + 1 <= y_max) y++;
 
                 if (current_pos < 3) {
                     buffer[current_pos++] = value;
                     rk_mytermregime(1, 50, 1, 1, 1);
-                    mt_gotoXY(x, y);
                     printf("%c", value);
+                    mt_gotoXY(x, y);
                 }
             }
 
             else if (value == KEYS_NAME[KEY_ENTER]) {
-                sc_icounterSet(rk_string_dec_to_dec(buffer));
+                sc_icounterSet(rk_hex_to_dec(buffer));
                 sc_TermUpdate(big_char);
                 break;
             }
