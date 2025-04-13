@@ -31,7 +31,8 @@ sc_commandEncode (int sign, int command, int operand, int *value)
         return -1; 
     } 
 
-    if (command < 0 || command > 0x7F) { // 7 бит на команду
+    // После сдвига команда должна помещаться в 7 бит
+    if (command < 0 || command > 0xFF) { // теперь принимаем 8 бит
         return -1; 
     } 
 
@@ -44,16 +45,29 @@ sc_commandEncode (int sign, int command, int operand, int *value)
     // Устанавливаем знак (бит 14)
     result |= (sign << 14); 
 
-    // Устанавливаем команду (биты 13-7)
-    result |= (command << 7);
+    // Устанавливаем команду (биты 13-7) со сдвигом вправо на 1
+    result |= (command  << 7);
 
     // Устанавливаем операнд (биты 6-0)
     result |= operand;
+
+    mt_gotoXY(35, 40);
+
+    sc_printBinary(result);
+
+    printf("\n");
+
+    sc_printBinary(command);
+
+    printf("\n");
+
+    sc_printBinary(operand);
 
     *value = result; 
 
     return 0; 
 }
+
 
 int
 sc_commandValidate (int command) 

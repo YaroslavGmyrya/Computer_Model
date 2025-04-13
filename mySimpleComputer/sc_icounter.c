@@ -23,8 +23,11 @@ sc_icounterInit (void)
 int
 sc_icounterSet (int value) 
 { 
-    if(value < 0 || value > 127)
+    if(value < 0 || value > 127){
+        sc_regSet(M, 1);
         return -1;
+    }
+        
  
     command_counter = value; 
     return 0; 
@@ -49,5 +52,5 @@ sc_printCounter (void)
 
     mt_gotoXY (7, col - 61);
 
-    printf ("T: %03d     IC: %03d", 0, value);
+    printf ("T: %03d     IC: %03x", 0, value);
 }
