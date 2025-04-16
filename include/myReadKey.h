@@ -1,5 +1,7 @@
 #pragma once
 
+#define enable_command_size 40
+
 enum KEYS{
     KEY_0,
     KEY_1,
@@ -85,6 +87,10 @@ enum KEYS{
 };
 
 extern const int KEYS_NAME[];
+
+extern const int enable_command[];
+
+extern int interactive_mode;
 
 extern struct termios saved_attributes;
 

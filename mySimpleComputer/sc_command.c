@@ -1,7 +1,7 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myTerm.h"
 #include "../include/myBigChars.h"
-
+#include "../include/myReadKey.h"
 int
 sc_commandDecode (int value, int *sign, int *command, int *operand) 
 { 
@@ -72,10 +72,10 @@ sc_commandEncode (int sign, int command, int operand, int *value)
 int
 sc_commandValidate (int command) 
 { 
-    if (command >= 0x800) 
-    { 
-        return -1; 
-    } 
+    for(int i = 0; i < enable_command_size; ++i){
+        if(command == enable_command[i])
+            return 1;
+    }
  
     return 0; 
 } 
