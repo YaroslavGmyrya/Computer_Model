@@ -1,6 +1,7 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myTerm.h"
 #include "../include/myBigChars.h"
+#include "../include/myReadKey.h"
 
 int
 sc_memoryGet (int address, int *value) 
@@ -79,10 +80,16 @@ sc_memorySave (char *filename)
 int
 sc_memorySet (int address, int value) 
 { 
-    if (address >= SIZE || value > 0x3fff || value < -0x3fff) 
+    if (address >= SIZE || address < 0 || value > 0x7fff || value < -0x7fff) 
     { 
         return -1; 
     } 
+
+
+    if(!sc_commandValidate(value)){
+        sc_regSet(E, 1);
+    }
+        
 
    
     if(value < 0){
@@ -157,4 +164,3 @@ sc_printCell (int address, enum colors fg, enum colors bg)
             printf ("+%04x", result);
         }
 }
-

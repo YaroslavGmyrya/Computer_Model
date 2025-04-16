@@ -2,17 +2,14 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myBigChars.h"
 #include "../include/myReadKey.h"
-#define ROWS 18                  
-#define COLS 2
-
-#define DEFAULT_FILE "font.bin"
+#include "../include/myInterputs.h"
+#include <signal.h>
+#include <sys/time.h>
 
 int
 main (int argc, char *argv[])
 {
     const char *filename = (argc == 2) ? argv[1] : DEFAULT_FILE;
-
-    int big_char[ROWS][COLS];
 
     FILE *file = fopen(filename, "rb");
 
@@ -21,7 +18,7 @@ main (int argc, char *argv[])
         return 0;
     }
 
-    int elements_read = fread(big_char, sizeof(int), ROWS * COLS, file);
+    int elements_read = fread((void *)big_char, sizeof(int), ROWS * COLS, file);
 
     if (elements_read != ROWS * COLS) {
         printf("Warning: File read error, read only %d elements.\n", elements_read);
@@ -49,14 +46,18 @@ main (int argc, char *argv[])
 
     sc_memorySet(0, 16383);
 
+    sc_regSet(T, 1);
+
     for(int i = 0; i < 7; i++)
     {
         sc_addIOEntry (i, '>', memory[i] < 0 ? memory[i] ^ (1 << 14) : memory[i]);
     }
 
-    sc_TermUpdate(big_char);
+    sc_TermUpdate();
 
     enum KEYS value;
+
+    setup_timer();
 
     rk_mytermregime(1, 50, 1, 0, 1);
 
@@ -66,13 +67,42 @@ main (int argc, char *argv[])
 
         rk_mytermregime(1, 50, 1, 0, 1);
         
-        if(value == KEYS_NAME[KEY_ESC])
+        if(value == KEYS_NAME[KEY_ESC]){
+            sc_TermUpdate();
             break;
+        }
+            
+        else if((value == KEYS_NAME[KEY_R] || value == KEYS_NAME[KEY_r]) && interactive_mode){
+            interactive_mode = 0;
+            sc_regSet(T, 0);
+            rk_readkey(&value);
+            while(1){
+                rk_readkey(&value);
+                if(value == KEYS_NAME[KEY_T] || value == KEYS_NAME[KEY_t]){
+                    IRC(SIGALRM, big_char);
+                }
+
+                else if(value == KEYS_NAME[KEY_ESC]){
+                    interactive_mode = 1;
+                    break;
+                }
+            }
+        }
 
 
-        if(value == KEYS_NAME[KEY_i] || value == KEYS_NAME[KEY_I]){
+        else if(value == KEYS_NAME[KEY_i] || value == KEYS_NAME[KEY_I] && interactive_mode){
 
             sc_memoryInit();
+
+            sc_accumulatorSet(0);
+
+            sc_regSet(M, 0);
+
+            sc_regSet(E, 0);
+
+            sc_regSet(P, 0);
+
+            sc_regSet(Z, 0);
 
             for (int i = 0; i < MAX_LINES; i++) {
                 io_log[i].address = 0;
@@ -80,10 +110,10 @@ main (int argc, char *argv[])
                 io_log[i].value = 0;
             }
 
-            sc_TermUpdate(big_char);
+            sc_TermUpdate();
         }
 
-        else if(value == KEYS_NAME[KEY_RIGHT]){
+        else if(value == KEYS_NAME[KEY_RIGHT] && interactive_mode){
 
             if(command_counter + 1 > 127)
                 command_counter = 0;
@@ -91,10 +121,10 @@ main (int argc, char *argv[])
             else
                 command_counter++;
 
-            sc_TermUpdate(big_char);
+            sc_TermUpdate();
         }
 
-        else if(value == KEYS_NAME[KEY_LEFT]){
+        else if(value == KEYS_NAME[KEY_LEFT] && interactive_mode){
 
             if(command_counter - 1 < 0)
                 command_counter = 127;
@@ -102,10 +132,10 @@ main (int argc, char *argv[])
             else
                 command_counter--;
 
-            sc_TermUpdate(big_char);
+            sc_TermUpdate();
         }
 
-        else if(value == KEYS_NAME[KEY_TOP]){
+        else if(value == KEYS_NAME[KEY_TOP] && interactive_mode){
 
             if(command_counter - 10 < 0)
                 command_counter = 120 + (command_counter % 10);
@@ -113,10 +143,10 @@ main (int argc, char *argv[])
             else
                 command_counter -= 10;
 
-            sc_TermUpdate(big_char);
+            sc_TermUpdate();
         }
 
-        else if(value == KEYS_NAME[KEY_BOTTOM]){
+        else if(value == KEYS_NAME[KEY_BOTTOM] && interactive_mode){
 
             if(command_counter + 10 > 127)
                 command_counter = 0 + (command_counter % 10);
@@ -124,19 +154,61 @@ main (int argc, char *argv[])
             else
                 command_counter+=10;
 
-            sc_TermUpdate(big_char);
+            sc_TermUpdate();
         }
 
-        else if(value == KEYS_NAME[KEY_S] || value == KEYS_NAME[KEY_s]){
-           sc_memorySave("memory.bin");
+        else if(value == KEYS_NAME[KEY_S] || value == KEYS_NAME[KEY_s] && interactive_mode){
+            mt_gotoXY(26, 40);
+            rk_mytermregime(1, 50, 1, 1, 1);
+            int i = 0;
+            char buffer[200];
+
+            while(value != KEYS_NAME[KEY_ENTER]){
+                rk_readkey(&value);
+
+                buffer[i++] = value;
+            }
+
+            buffer[i] = '\0';
+
+            sc_memorySave(buffer);
+            
+           
         }
 
-        else if(value == KEYS_NAME[KEY_L] || value == KEYS_NAME[KEY_l]){
-            sc_memoryLoad("memory.bin");
-            sc_TermUpdate(big_char);
+        else if(value == KEYS_NAME[KEY_L] || value == KEYS_NAME[KEY_l] && interactive_mode){
+            int  x = 26, y = 40;
+            mt_gotoXY(x, y);
+            rk_mytermregime(1, 50, 1, 1, 1);
+            int i = 0;
+            char buffer[200];
+
+            while(value != KEYS_NAME[KEY_ENTER]){
+
+                if (value == KEYS_NAME[KEY_ESC]) {
+                    sc_TermUpdate();
+                    break;
+                }
+
+                else if (value == KEYS_NAME[KEY_BACKSPACE]) {
+                        buffer[--i] = ' ';
+                        printf(" ");
+                        
+                        y--;
+                        mt_gotoXY(x, y);
+                    }
+
+                rk_readkey(&value);
+
+                buffer[i++] = value;
+            }
+
+
+            sc_memoryLoad(buffer);
+            sc_TermUpdate();
          }
 
-       else if (value == KEYS_NAME[KEY_F2]) {
+       else if (value == KEYS_NAME[KEY_F2] && interactive_mode) {
     int x = 2, y = 116;
     int block = 0;
     int y_max = y;
@@ -227,7 +299,7 @@ main (int argc, char *argv[])
                 int val = rk_hex_to_dec(unsigned_buffer);
                 printf("%d", val);
                 sc_accumulatorSet(val);
-                sc_TermUpdate(big_char);
+                sc_TermUpdate();
             } else {
                 char operand_char[3] = {'\0'};
                 char command_char[3] = {'\0'};
@@ -251,19 +323,19 @@ main (int argc, char *argv[])
                 mt_gotoXY(40, 40);
                 printf("%x", encoded_value);
                 sc_accumulatorSet(encoded_value);
-                sc_TermUpdate(big_char);
+                sc_TermUpdate();
             }
             break;
         }
 
         else if (value == KEYS_NAME[KEY_ESC]) {
-            sc_TermUpdate(big_char);
+            sc_TermUpdate();
             break;
         }
     }
 }
 
-    else if (value == KEYS_NAME[KEY_F4]) {
+    else if (value == KEYS_NAME[KEY_F4] && interactive_mode) {
         int x = 7, y = 116;
         int block = 0;
         int y_max = y - 1;
@@ -318,7 +390,7 @@ main (int argc, char *argv[])
                     block++;
                     y -= 10;
                     y_max = y;
-                    y_min = y - 3;
+                    y_min = y - 4;
                     mt_gotoXY(x, y);
                     rk_counter_to_string(buffer);
                     current_pos = 3;
@@ -341,12 +413,12 @@ main (int argc, char *argv[])
 
             else if (value == KEYS_NAME[KEY_ENTER]) {
                 sc_icounterSet(rk_hex_to_dec(buffer));
-                sc_TermUpdate(big_char);
+                sc_TermUpdate();
                 break;
             }
 
             else if (value == KEYS_NAME[KEY_ESC]) {
-                sc_TermUpdate(big_char);
+                sc_TermUpdate();
                 break;
             }
 
@@ -355,7 +427,7 @@ main (int argc, char *argv[])
         }
     }
 
-    else if(value == KEYS_NAME[KEY_ENTER]){
+    else if(value == KEYS_NAME[KEY_ENTER] && interactive_mode){
         char buffer[6];
         buffer[5] = '\0';
         rk_command_to_string(buffer);
@@ -422,8 +494,11 @@ main (int argc, char *argv[])
                 }
             }
             
-            if(value == KEYS_NAME[KEY_ESC])
+            if(value == KEYS_NAME[KEY_ESC]){
+                sc_TermUpdate();
                 break;
+            }
+                
 
             if(value == KEYS_NAME[KEY_ENTER]){
                 char ubuffer[5];
@@ -441,7 +516,7 @@ main (int argc, char *argv[])
 
                 sc_addIOEntry(command_counter, '>', rk_hex_to_dec(ubuffer));
         
-                sc_TermUpdate(big_char);
+                sc_TermUpdate();
 
                 break;
             }

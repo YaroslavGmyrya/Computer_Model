@@ -5,8 +5,9 @@ all:
 	make -C console
 	make run -C console
 	make -C myReadKey
+	make -C myInterputs
 
-	gcc ./myTerm/console.c -o main.out -L./myTerm -L./mySimpleComputer -L./myBigChars -L./myReadKey -lmyTermLib -lmySimpleLib -lmyBigChars -lmyReadKey -lm
+	gcc ./myTerm/console.c -o main.out -L./myTerm -L./mySimpleComputer -L./myBigChars -L./myReadKey -L./myInterputs -lmyTermLib -lmySimpleLib -lmyBigChars -lmyReadKey -lmyInterput -lm
 
 clean:
 	rm -f *.a *.out
@@ -15,6 +16,7 @@ clean:
 	make clean -C myBigChars
 	make clean -C console
 	make clean -C myReadKey
+	make clean -C myInterputs
 
 run:
 	./main.out

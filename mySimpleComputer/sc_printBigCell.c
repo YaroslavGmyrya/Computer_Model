@@ -2,7 +2,7 @@
 #include "../include/myTerm.h"
 #include "../include/myBigChars.h"
 
-void sc_printBigCell(int big_char[][2]){
+void sc_printBigCell(){
     bc_box(10, 97, 11, 60, WHITE, BLACK, "BigCell", RED, BLACK);
     int value;
     int sign, command, operand;

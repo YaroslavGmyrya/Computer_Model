@@ -1,5 +1,6 @@
 #include "../include/MySimpleComputer.h"
-void sc_TermUpdate(int big_char[][2]){
+
+void sc_TermUpdate(){
 
     int counter_value = 0;
     int memory_value = 0;
@@ -21,8 +22,6 @@ void sc_TermUpdate(int big_char[][2]){
     
     sc_printAccumulator ();
     
-    sc_regSet(T, 1);
-    
     sc_printFlags ();
     
     sc_printCounter ();
@@ -35,10 +34,9 @@ void sc_TermUpdate(int big_char[][2]){
     fflush(stdout);
     return_table();
     
-    sc_printBigCell(big_char);
+    sc_printBigCell();
     
     fflush(stdout);
-    
     
     sc_printTerm ();
 

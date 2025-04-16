@@ -52,5 +52,5 @@ sc_printCounter (void)
 
     mt_gotoXY (7, col - 61);
 
-    printf ("T: %03d     IC: %03x", 0, value);
+    printf ("T: %03d     IC: %03x", interputs_counter, value);
 }

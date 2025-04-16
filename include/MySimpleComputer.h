@@ -19,6 +19,11 @@
 #define E 0x10
 #define SIZE 128
 
+#define ROWS 18                  
+#define COLS 2
+
+#define DEFAULT_FILE "font.bin"
+
 extern const int SIZE_COMMAND;
 extern int memory[SIZE];
 
@@ -26,6 +31,12 @@ extern int accumulator;
 
 extern int command_counter;
 extern int flags_register;
+
+extern int interputs_counter;
+
+extern int big_char[ROWS][COLS];
+
+extern int processing;
 
 int sc_memoryInit (void);
 int sc_memorySet (int address, int value);
@@ -60,7 +71,7 @@ void sc_printCommand ();
 void sc_addIOEntry (int address, char type, int value);
 void sc_printTerm ();
 void sc_printCounter (void);
-void sc_printBigCell(int big_char[][2]);
-void sc_TermUpdate(int big_char[][2]);
+void sc_printBigCell();
+void sc_TermUpdate();
 void sc_printInfo();
 int sc_negative_to_dec(int num);

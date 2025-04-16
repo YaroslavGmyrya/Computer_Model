@@ -25,7 +25,7 @@ int
 sc_accumulatorSet (int value) 
 { 
  
-    if (value > 0x7fff || value < -0x7fff) 
+    if (value > 0x7fff || value <= -0x7fff) 
     { 
         return -1; 
     } 
