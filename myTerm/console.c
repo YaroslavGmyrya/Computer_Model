@@ -57,8 +57,6 @@ main (int argc, char *argv[])
 
     enum KEYS value;
 
-    setup_timer();
-
     rk_mytermregime(1, 50, 1, 0, 1);
 
     while(1){
@@ -71,18 +69,22 @@ main (int argc, char *argv[])
             sc_TermUpdate();
             break;
         }
+
+        else if((value == KEYS_NAME[KEY_T] || value == KEYS_NAME[KEY_t]) && interactive_mode){
+            force_step = 1;
+            signal(SIGALRM, IRC);
+            raise(SIGALRM);
+        }
             
         else if((value == KEYS_NAME[KEY_R] || value == KEYS_NAME[KEY_r]) && interactive_mode){
             interactive_mode = 0;
             sc_regSet(T, 0);
             rk_readkey(&value);
+            setup_timer();
             while(1){
                 rk_readkey(&value);
-                if(value == KEYS_NAME[KEY_T] || value == KEYS_NAME[KEY_t]){
-                    IRC(SIGALRM, big_char);
-                }
-
-                else if(value == KEYS_NAME[KEY_ESC]){
+               
+                if(value == KEYS_NAME[KEY_ESC]){
                     interactive_mode = 1;
                     break;
                 }

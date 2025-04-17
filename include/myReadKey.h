@@ -92,6 +92,8 @@ extern const int enable_command[];
 
 extern int interactive_mode;
 
+extern int force_step;
+
 extern struct termios saved_attributes;
 
 int rk_readkey(enum KEYS *value);

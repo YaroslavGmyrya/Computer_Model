@@ -43,3 +43,5 @@ const int enable_command[] = {0x00, 0x01, 0x0A, 0x0B, 0x14, 0x15, 0x1E, 0x1F, 0x
 struct termios saved_attributes;
 
 int interactive_mode = 1;
+
+int force_step = 0;
