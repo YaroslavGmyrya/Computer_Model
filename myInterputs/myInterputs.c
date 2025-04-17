@@ -65,7 +65,10 @@ void IRC(int signum) {
     if (signum == SIGALRM) {
         int flag_T;
         sc_regGet(T, &flag_T);
-        if (flag_T) return;
+
+        if (flag_T && !force_step) return; 
+
+        force_step = 0;
 
         if (interputs_counter > 0) {
             interputs_counter--;
@@ -73,13 +76,12 @@ void IRC(int signum) {
             return;
         }
 
-        if(processing && interputs_counter == 0){
+        if (processing && interputs_counter == 0) {
             command_counter++;
             processing = 0;
         }
 
         CU();
-            
     }
 
     else if (signum == SIGUSR1) {
@@ -87,11 +89,9 @@ void IRC(int signum) {
         accumulator = 0;
         sc_memoryInit();
         sc_regInit();
-
         sc_regSet(T, 1);
         interputs_counter = 0;
         interactive_mode = 1;
-
     }
 
     sc_TermUpdate();
