@@ -50,7 +50,7 @@ main (int argc, char *argv[])
 
     for(int i = 0; i < 7; i++)
     {
-        sc_addIOEntry (i, '>', memory[i] < 0 ? memory[i] ^ (1 << 14) : memory[i]);
+        sc_addIOEntry (i, '<', memory[i] < 0 ? memory[i] ^ (1 << 14) : memory[i]);
     }
 
     sc_TermUpdate();
@@ -515,8 +515,6 @@ main (int argc, char *argv[])
                     sc_memorySet(command_counter, rk_hex_to_dec(ubuffer));
                 else if(buffer[0] == '-')
                     sc_memorySet(command_counter, -rk_hex_to_dec(ubuffer));
-
-                sc_addIOEntry(command_counter, '>', rk_hex_to_dec(ubuffer));
         
                 sc_TermUpdate();
 

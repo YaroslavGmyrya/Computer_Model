@@ -15,7 +15,6 @@ int ALU(int command, int operand) {
 
             sc_accumulatorSet(accum_value - mem_value); //0011111 0001010
             
-
             break;
 
         case 0x20:
@@ -54,10 +53,16 @@ void CU () {
 
     if (sc_memoryGet(instruction_counter, &instruction) == 0 &&
         sc_commandDecode(instruction, &sign, &command, &operand) == 0 && interputs_counter == 0) {
-
             if (sc_commandValidate(command)){
+                sc_addIOEntry(instruction_counter, '>', instruction);
                 ALU(command, operand);
             }
+
+            else{
+                sc_addIOEntry(instruction_counter, '>', instruction);
+                command_counter++;
+            }
+                
     }
 }
 
