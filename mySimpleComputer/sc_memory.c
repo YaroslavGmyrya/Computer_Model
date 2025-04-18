@@ -10,6 +10,8 @@ sc_memoryGet (int address, int *value)
     { 
         return -1; 
     } 
+    
+    
  
     *value = memory[address]; 
     return 0; 
@@ -91,7 +93,8 @@ sc_memorySet (int address, int value)
     }
         
 
-   
+    sc_addIOEntry(command_counter, '<', value);
+
     if(value < 0){
         if(value != -16383)
             memory[address] = (abs(value) ^ 0x7fff) + 1;
