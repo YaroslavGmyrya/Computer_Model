@@ -1,18 +1,19 @@
 #include "../include/myTerm.h"
 #include "../include/MySimpleComputer.h"
 #include "../include/myBigChars.h"
+#include "../include/myReadKey.h"
 
 void
 sc_addIOEntry (int address, char type, int value)
-{
-    for (int i = 1; i < MAX_LINES; i++)
-    {
-        io_log[i - 1] = io_log[i];
-    }
-    
-    io_log[MAX_LINES - 1].address = address;
-    io_log[MAX_LINES - 1].type = type;
-    io_log[MAX_LINES - 1].value = value;
+{    
+    io_log[current_pos_log].address = address;
+    io_log[current_pos_log].type = type;
+    io_log[current_pos_log].value = value;
+
+    current_pos_log++;
+
+    if(current_pos_log > MAX_LINES)
+        start++;
 }
 
 void 
@@ -21,7 +22,7 @@ sc_printTerm ()
     bc_box(22, 97, 9, 16, WHITE, BLACK, "IN-OUT", GREEN, BLACK);
     mt_gotoXY(26,100);
     mt_setfgcolor(WHITE);
-    for (int i = 0, j = 1; i < MAX_LINES; i++) 
+    for (int i = start, j = 1; i < MAX_LINES + start - 1; i++) 
     {
         if (io_log[i].type != 0) 
         { 

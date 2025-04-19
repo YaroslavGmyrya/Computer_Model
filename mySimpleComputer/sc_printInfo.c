@@ -3,7 +3,7 @@
 
 void sc_printInfo(){
 
-    bc_box(22, 120, 7, 31, WHITE, BLACK, "INFO", GREEN, BLACK);
+    bc_box(22, 120, 8, 31, WHITE, BLACK, "INFO", GREEN, BLACK);
 
     mt_setbgcolor(BLACK);
     mt_setfgcolor(WHITE);
@@ -27,4 +27,8 @@ void sc_printInfo(){
     mt_gotoXY(27, 121);
 
     printf("F4 - instruction counter");
+
+    mt_gotoXY(28, 121);
+
+    printf("O - IN-OUT блок");
 }

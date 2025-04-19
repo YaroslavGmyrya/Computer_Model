@@ -75,6 +75,188 @@ main (int argc, char *argv[])
             signal(SIGALRM, IRC);
             raise(SIGALRM);
         }
+
+        else if((value == KEYS_NAME[KEY_o] || value == KEYS_NAME[KEY_O]) && interactive_mode){
+            int y = 23, x = 100;
+
+            int min_y, min_x, max_y, max_x;
+
+            max_y = 30, max_x = 110, min_y = 23, min_x = 100;
+
+            int block = 0;
+
+            char type = '\0';
+            char address[4] = {'\0'};
+            char val[6] = {'\0'};
+
+            int address_i = 0;
+            int val_i = 0;
+
+            while(1){
+                rk_readkey(&value);
+                mt_gotoXY(y, x);
+                if(value == KEYS_NAME[KEY_ESC]){
+                    sc_TermUpdate();
+                    break;
+                }
+
+                else if(value == KEYS_NAME[KEY_BOTTOM]){
+                    if(y + 1 < max_y)
+                        mt_gotoXY(++y, x);
+                    else{
+                        start++;
+                        printf("%d", start);
+                    }
+                }
+
+                else if(value == KEYS_NAME[KEY_TOP]){
+                    if(y - 1 >= min_y)
+                        mt_gotoXY(--y, x);
+                }
+
+                else if(value == KEYS_NAME[KEY_RIGHT]){
+                    if(x + 1 <= max_x){
+                        if(x + 1 == 103 || x + 1 == 105){
+                            block += 1;
+                            x += 2;
+                            mt_gotoXY(y, x);
+                        }
+
+                        else{
+                            mt_gotoXY(y, ++x);
+                        }
+                    }
+                }
+
+                else if(value == KEYS_NAME[KEY_LEFT]){
+                    if(x - 1 >= min_x)
+                        if(x - 1 == 103 || x - 1 == 105){
+                            block -= 1;
+                            x -= 2;
+                            mt_gotoXY(y, x);
+                        }
+                        else{
+                            mt_gotoXY(y, --x);
+                        } 
+                }
+
+                else if(value == KEYS_NAME[KEY_ENTER]){
+                    while(1){
+                        mt_gotoXY(y, x);
+                        rk_readkey(&value);
+                        if(value == KEYS_NAME[KEY_ESC]){
+                            sc_TermUpdate();
+                            break;
+                        }
+
+                        else if (value == KEYS_NAME[KEY_BACKSPACE]) {
+                            if(x - 1 >= min_x){
+                                printf(" ");
+
+                                if(x - 1 == 103 || x - 1 == 105)
+                                    block -= 1;
+
+                                if(block == 0){
+                                    address[x - min_x] = ' ';
+                                }
+    
+                                if(block == 1){
+                                    type = ' ';
+                                }
+    
+                                if(block == 2){
+                                    val[x - min_x - 6] = ' ';
+                                }
+
+                                if(x - 1 == 103 || x - 1 == 105){
+                                    x -= 2;
+                                    mt_gotoXY(y, x);
+                                }
+                                else{
+                                    mt_gotoXY(y, --x);
+                                } 
+                            }
+
+                            mt_gotoXY(30, 40);
+                            printf("%s\n%d", address, block);
+                        }
+
+                        else if ((KEYS_NAME[KEY_a] <= value && value <= KEYS_NAME[KEY_f]) ||
+                        (KEYS_NAME[KEY_A] <= value && value <= KEYS_NAME[KEY_F]) ||
+                        value == KEYS_NAME[KEY_PLUS] || value == KEYS_NAME[KEY_MINUS] ||
+                        (KEYS_NAME[KEY_0] <= value && value <= KEYS_NAME[KEY_9]) || 
+                        value == KEYS_NAME[KEY_MORE] || value == KEYS_NAME[KEY_LESS]) {
+        
+                            if (block == 0 &&
+                                value != KEYS_NAME[KEY_PLUS] &&
+                                value != KEYS_NAME[KEY_MINUS] &&
+                                value != KEYS_NAME[KEY_MORE] &&
+                                value != KEYS_NAME[KEY_LESS]) {
+                                address[x - min_x] = value;
+                                printf("%c", value);
+                            }
+
+                            else if (block == 1 && (value == KEYS_NAME[KEY_MORE] || value == KEYS_NAME[KEY_LESS])) {
+                                type = value;
+                                printf("%c", value);
+                            }
+
+                            else if(block == 2 && (value != KEYS_NAME[KEY_MORE] || value != KEYS_NAME[KEY_LESS])){
+                                val[x - min_x - 6] = value;
+                                printf("%c", value);
+                            }
+
+                            if(x + 1 == 103 || x + 1 == 105){
+                                x += 2;
+                                block += 1;
+                                if(block == 0)
+                                    printf("%c", value);
+
+                                mt_gotoXY(y, x);
+                            }
+    
+                            else if(x < max_x){
+                               mt_gotoXY(y, ++x);
+                            }
+
+
+                            mt_gotoXY(30, 40);
+                            printf("%s\n%d\n", address, block);
+                            printf("%c\n%d\n", type, block);
+                            printf("%s\n%d\n", val, block);
+                        }
+
+                        else if(value == KEYS_NAME[KEY_ENTER]){
+                            int num_address = rk_string_dec_to_dec(address);
+                            char unsigned_val[5];
+                            strcpy(unsigned_val, val + 1);
+                            mt_gotoXY(32, 40);
+                            int num_val = rk_hex_to_dec(unsigned_val);
+
+                            if(val[0] == '-')
+                                num_val = - num_val;
+
+                            if(type == '<'){
+                                sc_addIOEntry(num_address, type, num_val);
+                                memory[num_address] = num_val;
+                            }
+
+                            if(type == '>'){
+                                int mem_val = memory[num_address];
+
+                                if(mem_val == num_val){
+                                    sc_accumulatorSet(mem_val);
+                                    sc_addIOEntry(num_address, type, mem_val);
+                                }  
+                            }
+
+                            sc_TermUpdate();
+                           
+                        }
+                    }
+                }
+            }
+        }
             
         else if((value == KEYS_NAME[KEY_R] || value == KEYS_NAME[KEY_r]) && interactive_mode){
             interactive_mode = 0;
