@@ -84,6 +84,9 @@ enum KEYS{
 
     KEY_F2,
     KEY_F4,
+
+    KEY_MORE,
+    KEY_LESS
 };
 
 extern const int KEYS_NAME[];
@@ -93,6 +96,8 @@ extern const int enable_command[];
 extern int interactive_mode;
 
 extern int force_step;
+
+extern int start;
 
 extern struct termios saved_attributes;
 

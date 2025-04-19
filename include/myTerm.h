@@ -39,9 +39,10 @@ typedef struct
     int value;
 } IOEntry;
 
-extern IOEntry io_log[MAX_LINES];
+extern IOEntry io_log[];
 extern char* COLORS_TEXT_STORAGE[];
 extern char* COLORS_BG_STORAGE[];
+extern int current_pos_log;
 
 int mt_clrscr (void);
 int mt_gotoXY (int x, int y);

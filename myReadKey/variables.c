@@ -33,7 +33,11 @@ const int KEYS_NAME[] = {
     //F2
     0x1b4f51,
     //F4
-    0x1b4f53
+    0x1b4f53,
+    //More
+    0x3e,
+    //Less
+    0x3c
 };
 
 const int enable_command[] =  {0x0A, 0x0B, 0x14, 0x15, 0x1E, 0x1F, 0x20, 0x21, 0x28, 0x29, 0x2A, 
@@ -45,3 +49,5 @@ struct termios saved_attributes;
 int interactive_mode = 1;
 
 int force_step = 0;
+
+int start = 0;
