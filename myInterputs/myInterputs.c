@@ -216,3 +216,8 @@ void setup_timer() {
 
     setitimer(ITIMER_REAL, &timer, NULL); 
 }
+
+void disable_timer() {
+    struct itimerval timer = {0}; 
+    setitimer(ITIMER_REAL, &timer, NULL);
+}
