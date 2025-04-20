@@ -3,6 +3,17 @@
 #include "../include/myBigChars.h"
 #include "../include/myReadKey.h"
 
+void trim_newline(char *str) {
+    char *p = str;
+    while (*p) {
+        if (*p == '\n' || *p == '\r') {
+            *p = '\0';
+            break;
+        }
+        p++;
+    }
+}
+
 int
 sc_memoryGet (int address, int *value) 
 { 
@@ -30,18 +41,20 @@ sc_memoryInit (void)
 int
 sc_memoryLoad (char *filename) 
 { 
-
-    if (!filename)
-      return -1;
-
-    FILE *file = fopen (filename, "rb"); 
+    trim_newline(filename);
+    
+    if (!filename){
+        return -1;
+    }
+     
+    FILE *file = fopen(filename, "rb"); 
  
     if (!file) 
     { 
         return -1; 
     } 
  
-    int result = fread (memory, sizeof(int), SIZE, file); 
+    int result = fread(memory, sizeof(int), SIZE, file); 
 
     fclose (file); 
  

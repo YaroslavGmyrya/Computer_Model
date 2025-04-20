@@ -365,7 +365,7 @@ main (int argc, char *argv[])
             mt_gotoXY(x, y);
             rk_mytermregime(1, 50, 1, 1, 1);
             int i = 0;
-            char buffer[200];
+            char buffer[200] = {'\0'};
 
             while(value != KEYS_NAME[KEY_ENTER]){
 
@@ -375,7 +375,7 @@ main (int argc, char *argv[])
                 }
 
                 else if (value == KEYS_NAME[KEY_BACKSPACE]) {
-                        buffer[--i] = ' ';
+                        buffer[--i] = '\0';
                         printf(" ");
                         
                         y--;
@@ -386,7 +386,6 @@ main (int argc, char *argv[])
 
                 buffer[i++] = value;
             }
-
 
             sc_memoryLoad(buffer);
             sc_TermUpdate();
