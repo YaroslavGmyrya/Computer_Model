@@ -75,3 +75,4 @@ void sc_printBigCell();
 void sc_TermUpdate();
 void sc_printInfo();
 int sc_negative_to_dec(int num);
+void trim_newline(char *str);
