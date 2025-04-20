@@ -268,6 +268,7 @@ main (int argc, char *argv[])
                
                 if(value == KEYS_NAME[KEY_ESC]){
                     interactive_mode = 1;
+                    disable_timer();
                     break;
                 }
             }

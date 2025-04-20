@@ -1,5 +1,5 @@
-from array import *
-import os
+import sys
+from array import array
 
 commands = {
     "NOP": 0x00,
@@ -45,52 +45,55 @@ commands = {
 }
 
 def delete_extra_space(line):
-    cleaned = ' '.join(line.split())
-    cleaned.strip()
-    return cleaned
+    return ' '.join(line.strip().split())
 
-print("Введите название файла: ")
+def main():
+    if len(sys.argv) != 3:
+        print("Использование: sat файл.sa файл.o")
+        sys.exit(1)
 
-result = array('i', [0] * 128)
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
 
-filename = input()
+    result = array('i', [0] * 128)
 
-with open("tst.txt", "r") as file:
-    for line in file:
-        clean_line = delete_extra_space(line)
+   
+    with open(input_file, "r") as file:
+        for line_num, line in enumerate(file, 1):
+            clean_line = delete_extra_space(line)
 
-        if(len(clean_line.split(" ")) != 3):
-            print(f"Ошибка в строке: ${clean_line}")
-            exit()
+            if len(clean_line.split(" ")) != 3:
+                print(f"Ошибка в строке {line_num}: {clean_line}")
+                sys.exit(1)
 
-        address, command, operand = clean_line.split(" ")
-        
-        if(int(address) < 0 or int(address) >= 128):
-            print(f"Ошибка в строке: {clean_line}")
-            exit()
+            address, command, operand = clean_line.split(" ")
 
-        if(command not in commands):
-            print(f"Ошибка в строке: {clean_line}")
-            exit()
+            address = int(address)
+            operand = int(operand)
+            
+            if not (0 <= address < 128):
+                print(f"Недопустимый адрес в строке {line_num}: {clean_line}")
+                sys.exit(1)
 
-        if(int(operand) < 0 or int(operand) >= 128):
-            print(f"Ошибка в строке: {clean_line}")
-            exit()
+            if command not in commands:
+                print(f"Неизвестная команда в строке {line_num}: {clean_line}")
+                sys.exit(1)
 
-        command_bin = bin(int(commands[command]))[2:]
+            if not (0 <= operand < 128):
+                print(f"Недопустимый операнд в строке {line_num}: {clean_line}")
+                sys.exit(1)
 
-        command_bin = "0" * (7 - len(command_bin)) + command_bin
+            command_code = commands[command]
 
-        operand_bin = bin(int(operand))[2:]
+            full_command = (command_code << 7) | operand
 
-        operand_bin = "0" * (7 - len(operand_bin)) + operand_bin
+            result[address] = full_command
 
-        full_command = int("0" + command_bin + operand_bin, 2)
+    with open(output_file, "wb") as bin_file:
+        result.tofile(bin_file)
 
-        result[int(address)] = full_command
+    print(f"Трансляция завершена. Результат сохранён в '{output_file}'.")
 
-with open("program.o", "wb") as bin_file:
-    result.tofile(bin_file)
-        
+if __name__ == '__main__':
+    main()
 
-        
