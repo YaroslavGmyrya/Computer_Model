@@ -10,6 +10,7 @@ all:
 
 	gcc ./myTerm/console.c -o main.out -L./myTerm -L./mySimpleComputer -L./myBigChars -L./myReadKey -L./myInterputs -L./myCache -lmyTermLib -lmySimpleLib -lmyBigChars -lmyReadKey -lmyInterput -lmyCacheLib -lm
 
+
 clean:
 	rm -f *.a *.out
 	make clean -C mySimpleComputer
