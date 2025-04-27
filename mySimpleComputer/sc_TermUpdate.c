@@ -1,5 +1,5 @@
 #include "../include/MySimpleComputer.h"
-
+#include "../include/myCache.h"
 void sc_TermUpdate(){
 
     int counter_value = 0;
@@ -41,6 +41,10 @@ void sc_TermUpdate(){
     sc_printTerm ();
 
     sc_printInfo();
+
+    cache_update();
+
+    print_cache();
     
     mt_gotoXY(35, 1);
     

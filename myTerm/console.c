@@ -3,12 +3,17 @@
 #include "../include/myBigChars.h"
 #include "../include/myReadKey.h"
 #include "../include/myInterputs.h"
+#include "../include/myCache.h"
 #include <signal.h>
 #include <sys/time.h>
 
 int
 main (int argc, char *argv[])
-{
+{    
+    cahce_init();
+    
+    srand(time(NULL));
+
     const char *filename = (argc == 2) ? argv[1] : DEFAULT_FILE;
 
     FILE *file = fopen(filename, "rb");
@@ -43,8 +48,6 @@ main (int argc, char *argv[])
     }
     
     mt_clrscr ();
-
-    sc_memorySet(0, 16383);
 
     sc_regSet(T, 1);
 

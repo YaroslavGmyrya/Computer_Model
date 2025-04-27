@@ -3,22 +3,26 @@
 #include "../include/MySimpleComputer.h"
 #include "../include/myReadKey.h"
 #include "../include/myInterputs.h"
+#include "../include/myCache.h"
 
 int halt_flag = 0;
 
 void IRC(int signum);
 
-int ALU(int command, int operand) {
+int ALU(int command, int operand, int in_cache) {
     int mem_value, accum_value, val;
     processing = 1;
     sc_memoryGet(operand, &mem_value);
     sc_accumulatorGet(&accum_value);
 
     switch (command) {
-
         //SUB
         case 0x1F: 
-            interputs_counter = 10;
+
+            if(in_cache)
+                interputs_counter = 2;
+            else
+                interputs_counter = 10;
 
             sc_accumulatorSet(accum_value - mem_value);
             
@@ -26,7 +30,11 @@ int ALU(int command, int operand) {
 
         //DIVIDE 
         case 0x20:
-            interputs_counter = 10;     
+
+            if(in_cache)
+                interputs_counter = 2;
+            else
+                interputs_counter = 10;     
 
             if(mem_value == 0){
                 sc_regSet(Z, 1);
@@ -54,7 +62,12 @@ int ALU(int command, int operand) {
         
         //LOAD
         case 0x14:
-            interputs_counter = 10;
+
+            if(in_cache)
+                interputs_counter = 2;
+            else
+                interputs_counter = 10;
+
             sc_accumulatorSet(memory[operand]);
             break;
         
@@ -77,7 +90,12 @@ int ALU(int command, int operand) {
 
         //STORE
         case 0x15:
-            interputs_counter = 10;
+
+             if(in_cache)
+                interputs_counter = 2;
+            else
+                interputs_counter = 10;
+
             memory[operand] = accumulator;   
             break;   
         
@@ -89,7 +107,12 @@ int ALU(int command, int operand) {
 
         //READ
         case 0x0A:
-            interputs_counter = 10;
+
+             if(in_cache)
+                interputs_counter = 2;
+            else
+                interputs_counter = 10;
+
             char ch;
             char buffer[6] = {'\0'};
             int i = 0;
@@ -123,7 +146,7 @@ int ALU(int command, int operand) {
                 if(ch == KEYS_NAME[KEY_ENTER]){
                     res = rk_string_dec_to_dec(buffer);
                     memory[operand] = res;
-                    printf("\n%d", res);
+                   // printf("\n%d", res);
                     break;
                 }
 
@@ -133,6 +156,17 @@ int ALU(int command, int operand) {
             rk_mytermregime(1, 50, 1, 0, 1);
 
             break;
+
+            case 0x0B:
+                sc_memoryGet(operand, &val);
+                mt_gotoXY(33, 30);
+
+                if(val & (1 << 14))
+                    printf("-%04x", val);
+                else
+                    printf("+%04x", val);
+
+                break;
     }
 
     return 0;
@@ -158,7 +192,15 @@ void CU () {
         sc_commandDecode(instruction, &sign, &command, &operand) == 0 && interputs_counter == 0) {
             if (sc_commandValidate(command)){
                 //sc_addIOEntry(instruction_counter, '>', instruction);
-                ALU(command, operand);
+                if(value_in_cache(operand))
+                    ALU(command, operand, 1);
+                else{
+                    ALU(command, operand, 0);
+                    int index = rand() % 5;
+                    cache[index] = sc_get_line(operand / 10);
+                    sc_TermUpdate();
+                }
+                    
             }
 
             else{

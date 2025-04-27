@@ -3,9 +3,9 @@
 #include "../include/myTerm.h"
 #include "../include/myBigChars.h"
 
-int cahce_init(){
+void cahce_init(){
 
-    srand(time(0));
+    srand(time(NULL));
 
     int index;
 
@@ -38,6 +38,8 @@ int cahce_init(){
 
 void print_cache(){
 
+    int sign, command, operand;
+
     bc_box(21, 1, 7, 72, WHITE, BLACK, "CACHE", GREEN, BLACK);
 
     mt_setfgcolor(WHITE);
@@ -46,6 +48,8 @@ void print_cache(){
 
     for(int i = 0; i < CACHE_ROWS; ++i){
         for(int j = 0; j < CACHE_COLS; ++j){
+
+            sc_commandDecode(cache[i][j], &sign, &command, &operand);
             
             mt_gotoXY(22 + i, 4 + (j * 6));
 
@@ -53,12 +57,12 @@ void print_cache(){
                 printf("%d:", cache[i][j]);
             }
 
-            else if(cache[i][j] & (1 << 14)){
-                printf("-%04x", cache[i][j]);
+            else if(sign){
+                printf("-%02x%02x", command, operand);
             }
 
             else{
-                printf("+%04x", cache[i][j]);
+                printf("+%02x%02x", command, operand);
             }
                 
         }
@@ -72,4 +76,12 @@ int value_in_cache(int address){
     }
 
     return 0;
+}
+
+void cache_update(){
+    for(int i = 0; i < CACHE_ROWS; ++i){
+        int line = cache[i][0] / 10;
+        
+        cache[i] = sc_get_line(line);
+    }
 }
