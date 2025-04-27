@@ -1,3 +1,3 @@
 #include "../include/myCache.h"
 
-int* cache[CACHE_ROWS];
+int *cache[CACHE_ROWS];

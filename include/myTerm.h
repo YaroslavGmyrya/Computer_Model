@@ -4,44 +4,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <termios.h>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 
 #define MIN_W 150
 #define MIN_H 150
 #define MAX_LINES 10
 
-enum colors 
+enum colors
 {
-    BLACK,
-    RED,
-    GREEN,
-    YELLOW,
-    BLUE,
-    PURPLE,
-    LIGHT_BLUE,
-    WHITE,
-    LIGHT_BLACK,
-    LIGHT_RED,
-    LIGHT_GREEN,
-    LIGHT_YELLOW,
-    LIGHT_BLUE_HIGH,
-    LIGHT_PURPLE,
-    LIGHT_WHITE,
-    COLORS_COUNT
+  BLACK,
+  RED,
+  GREEN,
+  YELLOW,
+  BLUE,
+  PURPLE,
+  LIGHT_BLUE,
+  WHITE,
+  LIGHT_BLACK,
+  LIGHT_RED,
+  LIGHT_GREEN,
+  LIGHT_YELLOW,
+  LIGHT_BLUE_HIGH,
+  LIGHT_PURPLE,
+  LIGHT_WHITE,
+  COLORS_COUNT
 };
 
-typedef struct 
+typedef struct
 {
-    int address;
-    char type;
-    int value;
+  int address;
+  char type;
+  int value;
 } IOEntry;
 
 extern IOEntry io_log[];
-extern char* COLORS_TEXT_STORAGE[];
-extern char* COLORS_BG_STORAGE[];
+extern char *COLORS_TEXT_STORAGE[];
+extern char *COLORS_BG_STORAGE[];
 extern int current_pos_log;
 
 int mt_clrscr (void);
