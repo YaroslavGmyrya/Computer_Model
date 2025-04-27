@@ -10,5 +10,6 @@
 extern int *cache[CACHE_ROWS];
 
 void print_cache();
-int cahce_init();
+void cahce_init();
 int value_in_cache(int address);
+void cache_update();

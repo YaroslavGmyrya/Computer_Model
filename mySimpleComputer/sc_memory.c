@@ -2,6 +2,7 @@
 #include "../include/myTerm.h"
 #include "../include/myBigChars.h"
 #include "../include/myReadKey.h"
+#include "../include/myCache.h"
 
 void trim_newline(char *str) {
     char *p = str;
@@ -12,6 +13,32 @@ void trim_newline(char *str) {
         }
         p++;
     }
+}
+
+int* sc_get_line(int num_line){
+
+    if(num_line < 0 || num_line > 12){
+        return NULL;
+    }
+
+    int* row = (int*)malloc(CACHE_COLS * sizeof(int));
+
+    int value;
+
+    row[0] = num_line * 10;
+
+    num_line *= 10;
+
+    for(int i = 1; i < CACHE_COLS; ++i){
+        sc_memoryGet(num_line, &value);
+
+        row[i] = value;
+
+        num_line += 1;
+    }
+
+
+    return row;
 }
 
 int
@@ -41,11 +68,12 @@ sc_memoryInit (void)
 int
 sc_memoryLoad (char *filename) 
 { 
-    trim_newline(filename);
     
     if (!filename){
         return -1;
     }
+
+    trim_newline(filename);
      
     FILE *file = fopen(filename, "rb"); 
  
@@ -62,6 +90,7 @@ sc_memoryLoad (char *filename)
     { 
         return -1; 
     } 
+
  
     return 0; 
 }
@@ -114,8 +143,21 @@ sc_memorySet (int address, int value)
         else
             memory[address] = (abs(value) ^ 0x7fff) + 1;
     }
+
     else
         memory[address] = value;
+
+    int index = 0;
+
+    for(int i = 0; i < CACHE_ROWS; ++i){
+        if(cache[i][0] == address - (address % 10)){
+            index = i;
+            break;
+        }
+    }
+
+    cache[index] = sc_get_line(address / 10);
+
     return 0; 
 } 
 
