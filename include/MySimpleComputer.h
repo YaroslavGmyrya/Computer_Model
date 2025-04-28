@@ -1,7 +1,7 @@
 #pragma once
 
-#include <math.h>
 #include "./myTerm.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,5 +59,5 @@ void sc_printCommand ();
 void sc_addIOEntry (int address, char type, int value);
 void sc_printTerm ();
 void sc_printCounter (void);
-int* decToBin(int num);
-int sc_negative_to_dec(int num);
+int *decToBin (int num);
+int sc_negative_to_dec (int num);

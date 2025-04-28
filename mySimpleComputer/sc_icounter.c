@@ -2,45 +2,46 @@
 #include "../include/myTerm.h"
 
 int
-sc_icounterGet (int *value) 
-{ 
-    if (!value) { 
-        return -1; 
-    } 
- 
-    *value = command_counter; 
-    return 0; 
-} 
-
-int
-sc_icounterInit (void) 
-{ 
-    command_counter = 0; 
-    return 0; 
-} 
-
-int
-sc_icounterSet (int value) 
-{ 
-    if (value >= 0x800) 
-    {  
-        return -1; 
-    } 
- 
-    command_counter = value; 
-    return 0; 
-} 
-
-void 
-sc_printCounter (void) 
+sc_icounterGet (int *value)
 {
-    int value;
-    int row,col;
+  if (!value)
+    {
+      return -1;
+    }
 
-    mt_getscreensize (&row, &col);
-    sc_icounterGet (&value);
+  *value = command_counter;
+  return 0;
+}
 
-    mt_gotoXY (7, col - 59);
+int
+sc_icounterInit (void)
+{
+  command_counter = 0;
+  return 0;
+}
 
-    printf ("T: %d    IC: %d", value, value);
+int
+sc_icounterSet (int value)
+{
+  if (value >= 0x800)
+    {
+      return -1;
+    }
+
+  command_counter = value;
+  return 0;
+}
+
+void
+sc_printCounter (void)
+{
+  int value;
+  int row, col;
+
+  mt_getscreensize (&row, &col);
+  sc_icounterGet (&value);
+
+  mt_gotoXY (7, col - 59);
+
+  printf ("T: %d    IC: %d", value, value);
 }
