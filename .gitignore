@@ -1,6 +1,8 @@
-*.o
-*.a
-*.out
-*.bin
-*.txt
-*.sa
+.*
+!.c
+!.h
+!.md
+!.sh
+!.md
+!.yml
+!.py

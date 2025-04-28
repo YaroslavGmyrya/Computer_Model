@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "../include/myBigChars.h"
+#include <stdio.h>
 
 int
 main ()
