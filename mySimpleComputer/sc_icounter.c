@@ -1,55 +1,56 @@
 #include "../include/MySimpleComputer.h"
-#include "../include/myTerm.h"
 #include "../include/myBigChars.h"
+#include "../include/myTerm.h"
 
 int
-sc_icounterGet (int *value) 
-{ 
-    if (!value) { 
-        return -1; 
-    } 
- 
-    *value = command_counter; 
-    return 0; 
-} 
-
-int
-sc_icounterInit (void) 
-{ 
-    command_counter = 0; 
-    return 0; 
-} 
-
-int
-sc_icounterSet (int value) 
-{ 
-    if (value >= 0x800) 
-    {  
-        return -1; 
-    } 
- 
-    command_counter = value; 
-    return 0; 
-} 
-
-void 
-sc_printCounter (void) 
+sc_icounterGet (int *value)
 {
-    struct winsize ws;
+  if (!value)
+    {
+      return -1;
+    }
 
-    ioctl (1, TIOCGWINSZ, &ws);
-    
-    bc_box(6,97,3,18, WHITE, BLACK, "Counter", RED, BLACK);
+  *value = command_counter;
+  return 0;
+}
 
-    int value;
-    int row,col;
+int
+sc_icounterInit (void)
+{
+  command_counter = 0;
+  return 0;
+}
 
-    mt_getscreensize (&row, &col);
-    sc_icounterGet (&value);
+int
+sc_icounterSet (int value)
+{
+  if (value >= 0x800)
+    {
+      return -1;
+    }
 
-    mt_setfgcolor(WHITE);
+  command_counter = value;
+  return 0;
+}
 
-    mt_gotoXY (7, col - 59);
+void
+sc_printCounter (void)
+{
+  struct winsize ws;
 
-    printf ("T: %d    IC: %d", value, value);
+  ioctl (1, TIOCGWINSZ, &ws);
+
+  bc_box (6, 97, 3, 18, WHITE, BLACK, "Counter", RED, BLACK);
+
+  int value;
+  int row, col;
+
+  mt_getscreensize (&row, &col);
+  sc_icounterGet (&value);
+
+  mt_setfgcolor (WHITE);
+
+  mt_gotoXY (7, col - 59);
+
+  printf ("T: %d    IC: %d", value, value);
 }

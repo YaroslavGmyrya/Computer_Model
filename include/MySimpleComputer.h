@@ -1,8 +1,8 @@
 #pragma once
 
-#include <math.h>
-#include "./myTerm.h"
 #include "./myBigChars.h"
+#include "./myTerm.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -60,4 +60,4 @@ void sc_printCommand ();
 void sc_addIOEntry (int address, char type, int value);
 void sc_printTerm ();
 void sc_printCounter (void);
-void sc_printBigCell(int big_char[][2]);
+void sc_printBigCell (int big_char[][2]);
