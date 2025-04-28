@@ -1,36 +1,38 @@
-#include "../include/myTerm.h"
 #include "../include/MySimpleComputer.h"
 #include "../include/myBigChars.h"
+#include "../include/myTerm.h"
 
 void
 sc_addIOEntry (int address, char type, int value)
 {
-    for (int i = 1; i < MAX_LINES; i++)
+  for (int i = 1; i < MAX_LINES; i++)
     {
-        io_log[i - 1] = io_log[i];
+      io_log[i - 1] = io_log[i];
     }
-    
-    io_log[MAX_LINES - 1].address = address;
-    io_log[MAX_LINES - 1].type = type;
-    io_log[MAX_LINES - 1].value = value;
+
+  io_log[MAX_LINES - 1].address = address;
+  io_log[MAX_LINES - 1].type = type;
+  io_log[MAX_LINES - 1].value = value;
 }
 
-void 
-sc_printTerm () 
+void
+sc_printTerm ()
 {
-    bc_box(22, 97, 9, 16, WHITE, BLACK, "IN-OUT", GREEN, BLACK);
-    mt_gotoXY(26,100);
-    mt_setfgcolor(WHITE);
-    for (int i = 0, j = 1; i < MAX_LINES; i++) 
+  bc_box (22, 97, 9, 16, WHITE, BLACK, "IN-OUT", GREEN, BLACK);
+  mt_gotoXY (26, 100);
+  mt_setfgcolor (WHITE);
+  for (int i = 0, j = 1; i < MAX_LINES; i++)
     {
-        if (io_log[i].type != 0) 
-        { 
-            mt_gotoXY (22+j,100);
-            if(io_log[i].value & (1<<14))
-                printf("%03d %c -%04X\n", io_log[i].address, io_log[i].type, io_log[i].value);
-            else
-                printf("%03d %c +%04X\n", io_log[i].address, io_log[i].type, io_log[i].value);
-            j++;
+      if (io_log[i].type != 0)
+        {
+          mt_gotoXY (22 + j, 100);
+          if (io_log[i].value & (1 << 14))
+            printf ("%03d %c -%04X\n", io_log[i].address, io_log[i].type,
+                    io_log[i].value);
+          else
+            printf ("%03d %c +%04X\n", io_log[i].address, io_log[i].type,
+                    io_log[i].value);
+          j++;
         }
     }
 }

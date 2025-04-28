@@ -1,87 +1,87 @@
 #include "../include/MySimpleComputer.h"
-#include "../include/myTerm.h"
 #include "../include/myBigChars.h"
+#include "../include/myTerm.h"
 
 int
-sc_regGet (int reg, int *value) 
-{ 
+sc_regGet (int reg, int *value)
+{
 
-    if ((reg != P && reg != Z && reg != M && reg != T && reg != E) || !value) 
+  if ((reg != P && reg != Z && reg != M && reg != T && reg != E) || !value)
     {
-        return -1;
+      return -1;
     }
 
-    if(flags_register & reg)
-        *value = 1;
+  if (flags_register & reg)
+    *value = 1;
 
-    else
-        *value = 0;
+  else
+    *value = 0;
 
-    return 0; 
+  return 0;
 }
 
 int
-sc_regSet (int reg, int value) 
-{ 
+sc_regSet (int reg, int value)
+{
 
-   if ((reg != P && reg != Z && reg != M && reg != T && reg != E) || (value != 0 && value != 1)) 
-   {
-    return -1;
-   }
+  if ((reg != P && reg != Z && reg != M && reg != T && reg != E)
+      || (value != 0 && value != 1))
+    {
+      return -1;
+    }
 
-    if (value)
-        flags_register |= reg;
-    else
-        flags_register &= ~reg;
+  if (value)
+    flags_register |= reg;
+  else
+    flags_register &= ~reg;
 
-    return 0; 
+  return 0;
 }
 
 int
-sc_regInit (void) 
-{ 
+sc_regInit (void)
+{
 
-    flags_register = 0; 
+  flags_register = 0;
 
-    return 0; 
-} 
+  return 0;
+}
 
 void
-sc_printFlags (void) 
+sc_printFlags (void)
 {
-    struct winsize ws;
+  struct winsize ws;
 
-    ioctl (1, TIOCGWINSZ, &ws);
-    
-    bc_box(1,127,3,15, WHITE, BLACK, "Flags", RED, BLACK);
+  ioctl (1, TIOCGWINSZ, &ws);
 
-    mt_setfgcolor(WHITE);
+  bc_box (1, 127, 3, 15, WHITE, BLACK, "Flags", RED, BLACK);
 
-    int value_P;
-    int value_Z;
-    int value_M;
-    int value_T;
-    int value_E;
+  mt_setfgcolor (WHITE);
 
-    int rows;
-    int cols;
+  int value_P;
+  int value_Z;
+  int value_M;
+  int value_T;
+  int value_E;
 
-    mt_getscreensize (&rows, &cols);
+  int rows;
+  int cols;
 
-    mt_gotoXY (2, cols - 30);
+  mt_getscreensize (&rows, &cols);
 
-    sc_regGet (P, &value_P);
-    sc_regGet (Z, &value_Z);
-    sc_regGet (M, &value_M);
-    sc_regGet (T, &value_T);
-    sc_regGet (E, &value_E);
+  mt_gotoXY (2, cols - 30);
 
-    value_P ? printf("P ") : printf("_ ");
-    value_Z ? printf("Z ") : printf("_ ");
-    value_M ? printf("M ") : printf("_ ");
-    value_T ? printf("T ") : printf("_ ");
-    value_E ? printf("E ") : printf("_ ");
+  sc_regGet (P, &value_P);
+  sc_regGet (Z, &value_Z);
+  sc_regGet (M, &value_M);
+  sc_regGet (T, &value_T);
+  sc_regGet (E, &value_E);
 
-   
-    mt_setdefaultcolor ();
+  value_P ? printf ("P ") : printf ("_ ");
+  value_Z ? printf ("Z ") : printf ("_ ");
+  value_M ? printf ("M ") : printf ("_ ");
+  value_T ? printf ("T ") : printf ("_ ");
+  value_E ? printf ("E ") : printf ("_ ");
+
+  mt_setdefaultcolor ();
 }

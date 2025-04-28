@@ -1,8 +1,8 @@
 #pragma once
 
-#include <math.h>
-#include "./myTerm.h"
 #include "./myBigChars.h"
+#include "./myTerm.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +19,7 @@
 #define E 0x10
 #define SIZE 128
 
-#define ROWS 18                  
+#define ROWS 18
 #define COLS 2
 
 #define DEFAULT_FILE "font.bin"
@@ -71,7 +71,7 @@ void sc_printCommand ();
 void sc_addIOEntry (int address, char type, int value);
 void sc_printTerm ();
 void sc_printCounter (void);
-void sc_printBigCell();
-void sc_TermUpdate();
-void sc_printInfo();
-int sc_negative_to_dec(int num);
+void sc_printBigCell ();
+void sc_TermUpdate ();
+void sc_printInfo ();
+int sc_negative_to_dec (int num);
